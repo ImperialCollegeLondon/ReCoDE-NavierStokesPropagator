@@ -24,3 +24,11 @@ include("sim/TestDomainDescriptors.jl")
 
 # State
 include("sim/TestStates.jl")
+
+# Transformer
+include("util/TestTransformations.jl")
+
+#=
+Integration Test
+=#
+
