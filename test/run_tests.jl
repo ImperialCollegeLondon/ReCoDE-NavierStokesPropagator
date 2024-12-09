@@ -16,7 +16,7 @@ include("../src/util/Transformations.jl")
 using ..Transformations
 
 #=
-Module Level Test
+Module Level Unit Test
 =#
 
 # DomainDescriptor
@@ -32,3 +32,4 @@ include("util/TestTransformations.jl")
 Integration Test
 =#
 
+include("ITestTransformations.jl")

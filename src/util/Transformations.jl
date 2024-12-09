@@ -118,9 +118,6 @@ function physical2fourier!(tf::Transformer{T}, state::State{T}) where {T<:Abstra
 
     tf.fft_plan_F * state.v_F
 
-    # Grid Sizing
-    ny::Int64, nx::Int64, nz::Int64 = size(state.u)
-
     # Normalisation
     n::T = prod(size(state.u)[2:3])
 
@@ -150,9 +147,6 @@ function physical2fourier!(tf::Transformer{T}, arr::Array{Complex{T},3}, frac_mo
         tf.fft_plan * arr
 
     end
-
-    # Grid Sizing
-    ny::Int64, nx::Int64, nz::Int64 = size(arr)
 
     # De-aliasing
     if (dealias_mode)
