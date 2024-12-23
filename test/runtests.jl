@@ -20,16 +20,16 @@ Module Level Unit Test
 =#
 
 # DomainDescriptor
-include("sim/TestDomainDescriptors.jl")
+include("sim/DomainDescriptors.jl")
 
 # State
-include("sim/TestStates.jl")
+include("sim/States.jl")
 
 # Transformer
-include("util/TestTransformations.jl")
+include("util/Transformations.jl")
 
 #=
 Integration Test
 =#
 
-include("ITestTransformations.jl")
+include("StateTransformations.jl")

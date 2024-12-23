@@ -49,18 +49,22 @@ struct Transformer{T<:AbstractFloat}
     freq_kx_max::T
     freq_kz_max::T
 
-    function Transformer{T}(dir_wisdom::String, state::State{T}, domain::DomainDescriptor; wisdom_flag::String="measure", reset_wisdom::Bool=false) where {T<:AbstractFloat}
+    function Transformer{T}(dir_wisdom::String, state::State{T}, domain::DomainDescriptor; wisdom_flag::String="measure", reset_wisdom::Bool=false, test_mode::Bool=false) where {T<:AbstractFloat}
 
         @info("--- Initialising Transformer ---")
 
         # Directory Check
-        if (!isdir(dir_wisdom))
-            mkdir(dir_wisdom)
-        end
+        if (!test_mode)
 
-        if (isfile(string(dir_wisdom, "/fft"))) && (!reset_wisdom)
-            @info("Loading FFTW wisdom from $(dir_wisdom).")
-            FFTW.import_wisdom(string(dir_wisdom, "/fft"))
+            if (!isdir(dir_wisdom))
+                mkdir(dir_wisdom)
+            end
+
+            if (isfile(string(dir_wisdom, "/fft"))) && (!reset_wisdom)
+                @info("Loading FFTW wisdom from $(dir_wisdom).")
+                FFTW.import_wisdom(string(dir_wisdom, "/fft"))
+            end
+
         end
 
         @info("Initiating FFTW wisdom planning.")
@@ -76,7 +80,11 @@ struct Transformer{T<:AbstractFloat}
 
         end
 
-        FFTW.export_wisdom(string(dir_wisdom, "/fft"))
+        if (!test_mode)
+
+            FFTW.export_wisdom(string(dir_wisdom, "/fft"))
+            
+        end
 
         @info("FFTW wisdom planning complete.")
 

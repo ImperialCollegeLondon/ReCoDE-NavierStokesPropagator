@@ -1,25 +1,22 @@
 <!-- Your Project title, make it sound catchy! -->
 
-# Project title
+# Navier-Stokes Propagator
 
 <!-- Provide a short description to your project -->
 
 ## Description
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vitae pulvinar
-mauris. Praesent sollicitudin rutrum mauris sed congue. Donec vel orci elit.
-Phasellus luctus sodales elementum. Donec lacinia semper lorem, volutpat
-molestie arcu bibendum mollis. Nulla nec massa vitae sapien varius vulputate
-vel vitae ex. Curabitur convallis iaculis elit at faucibus. Sed eget facilisis
-orci, ut consequat neque.
+The repository contains source files for a Julia package written to solve the chaotic Navier-Stokes equations. The project aims to exemplify the improvement of simulation code quality due to the use of good programming abstractions (Julia Structs), done by defining sensible simulation constructs that reflects each core component of the simulation. Additionally, the repository adopts good programming practice through implementing detailed documentation with tests written for each simulation construct.
+
+The algorithm here used is a replicate of Diablo (https://github.com/johnryantaylor/DIABLO), written by John R. Taylor, albeit with a minor modification to the mesh spacing used. 
 
 <!-- What should the students going through your exemplar learn -->
 
 ## Learning Outcomes
 
-- Skill 1
-- Skill 2
-- Skill 3
+- Ability to distinguish and compartmentalise a multi-facet simulation algorithm into sensible simulation constructs via the implementation with Julia Structs 
+- Adopting good testing methodologies, through implementation of unit and integration tests
+- Understanding of the FFTW and HDF5 library and their abstraction through the usage of utility modules in their respective source files
 
 <!-- How long should they spend reading and practising using your Code.
 Provide your best estimate -->
@@ -40,8 +37,12 @@ List any resources you would recommend to get the students started.
 If there is an existing exemplar in the ReCoDE repositories link to that.
 -->
 
-### Academic
+### Theoretical
+- Understanding of the Fourier series and the relation to the discrete Fourier transform
+- Understanding of the finite difference method for approximating spatial derivatives and the use of implicit / explicit time-stepping schemes
+- Familiarity with Julia, readers not familiar with Julia can refer the ECRI Julia course (https://www.imperial.ac.uk/students/academic-support/graduate-school/professional-development/doctoral-students/research-computing-data-science/courses/introduction-to-julia/)
 
+Note : The theoratical understanding of the finite difference method, Fourier series and the time-stepping scheme are not a major necessity. An understanding of the mathematical structure for algorithimic implementation is sufficient to understand the ideas discussed in this tutorial.
 <!-- List the system requirements and how to obtain them, that can be as simple
 as adding a hyperlink to as detailed as writting step-by-step instructions.
 How detailed the instructions should be will vary on a case-by-case basis.
@@ -59,6 +60,7 @@ Here are some examples:
 
 ### System
 
+- Julia 1.11 with HDF5, FFTW and Test packages installed
 <!-- Instructions on how the student should start going through the exemplar.
 
 Structure this section as you see fit but try to be clear, concise and accurate
@@ -79,6 +81,10 @@ Solutions to the above can be found in `solutions`.
 
 ## Getting Started
 
+1. Clone the repository
+2. Launch Julia pkg mode via "]" in the REPL.
+3. Activate the package environment via "activate ." .
+4. Testing can be done by entering "pkg> test" .
 <!-- An overview of the files and folder in the exemplar.
 Not all files and directories need to be listed, just the important
 sections of your project, like the learning material, the code, the tests, etc.

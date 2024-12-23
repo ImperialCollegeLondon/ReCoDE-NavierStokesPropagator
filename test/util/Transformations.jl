@@ -14,15 +14,12 @@ Test Set
     state::State = State{Float64}(10.0, nx, ny, nz)
 
     # Initialise Transformation
-    tf::Transformer = Transformer{Float64}("test/fftw_wisdom", state, domain; wisdom_flag="exhaustive", reset_wisdom=true)
+    tf::Transformer = Transformer{Float64}("test/fftw_wisdom", state, domain; wisdom_flag="exhaustive", test_mode=true)
 
     @test length(tf.freq_kx) == nx
     @test length(tf.freq_kz) == nz
 
     @test tf.freq_kx_max == 4 * 2pi / Lx
     @test tf.freq_kz_max == 4 * 2pi / Lz
-
-    chmod("test/fftw_wisdom", 0o777; recursive=true)
-    rm("test/fftw_wisdom"; recursive=true)
 
 end
