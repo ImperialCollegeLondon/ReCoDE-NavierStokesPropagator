@@ -34,12 +34,12 @@ wisdom_dict["exhaustive"] = FFTW.EXHAUSTIVE
 struct Transformer{T<:AbstractFloat}
 
     # FFTW Plan (Base Grid)
-    fft_plan
-    ifft_plan
+    fft_plan::Any
+    ifft_plan::Any
 
     # FFTW Plan (Fractional Grid)
-    fft_plan_F
-    ifft_plan_F
+    fft_plan_F::Any
+    ifft_plan_F::Any
 
     # FFTW Frequency
     freq_kx::Vector{T}
@@ -53,9 +53,9 @@ struct Transformer{T<:AbstractFloat}
         dir_wisdom::String,
         state::State{T},
         domain::DomainDescriptor;
-        wisdom_flag::String="measure",
-        reset_wisdom::Bool=false,
-        test_mode::Bool=false,
+        wisdom_flag::String = "measure",
+        reset_wisdom::Bool = false,
+        test_mode::Bool = false,
     ) where {T<:AbstractFloat}
         @info("--- Initialising Transformer ---")
 
@@ -75,11 +75,11 @@ struct Transformer{T<:AbstractFloat}
 
         # Planning
         @time begin
-            fft_plan = plan_fft!(state.u, (2, 3); flags=wisdom_dict[wisdom_flag])
-            ifft_plan = plan_bfft!(state.u, (2, 3); flags=wisdom_dict[wisdom_flag])
+            fft_plan = plan_fft!(state.u, (2, 3); flags = wisdom_dict[wisdom_flag])
+            ifft_plan = plan_bfft!(state.u, (2, 3); flags = wisdom_dict[wisdom_flag])
 
-            fft_plan_F = plan_fft!(state.v_F, (2, 3); flags=wisdom_dict[wisdom_flag])
-            ifft_plan_F = plan_bfft!(state.v_F, (2, 3); flags=wisdom_dict[wisdom_flag])
+            fft_plan_F = plan_fft!(state.v_F, (2, 3); flags = wisdom_dict[wisdom_flag])
+            ifft_plan_F = plan_bfft!(state.v_F, (2, 3); flags = wisdom_dict[wisdom_flag])
         end
 
         if (!test_mode)
@@ -152,7 +152,10 @@ function physical2fourier!(tf::Transformer{T}, state::State{T}) where {T<:Abstra
 end
 
 function physical2fourier!(
-    tf::Transformer{T}, arr::Array{Complex{T},3}, frac_mode::Bool, dealias_mode::Bool
+    tf::Transformer{T},
+    arr::Array{Complex{T},3},
+    frac_mode::Bool,
+    dealias_mode::Bool,
 ) where {T<:AbstractFloat}
 
     # FFT
@@ -165,13 +168,13 @@ function physical2fourier!(
 
     # De-aliasing
     if (dealias_mode)
-        for ix in 1:nx
+        for ix = 1:nx
             if (abs(tf.freq_kx[ix]) > tf.freq_kx_max)
                 arr[:, ix, :] .= 0.0 + 0.0im
             end
         end
 
-        for iz in 1:nz
+        for iz = 1:nz
             if (abs(tf.freq_kz[iz]) > tf.freq_kz_max)
                 arr[:, :, iz] .= 0.0 + 0.0im
             end
@@ -218,7 +221,9 @@ function fourier2physical!(tf::Transformer{T}, state::State{T}) where {T<:Abstra
 end
 
 function fourier2physical!(
-    tf::Transformer{T}, arr::Array{Complex{T},3}, frac_mode::Bool
+    tf::Transformer{T},
+    arr::Array{Complex{T},3},
+    frac_mode::Bool,
 ) where {T<:AbstractFloat}
 
     # IFFT
@@ -255,8 +260,8 @@ function y2y_F!(state::State{T}) where {T<:AbstractFloat}
     arr_F[1, :, :] .= arr[1, :, :]
     arr_F[end, :, :] .= arr[end, :, :]
 
-    for iy in 2:(ny_F - 1)
-        arr_F[iy, :, :] .= 0.5 * (arr[iy, :, :] + arr[iy - 1, :, :])
+    for iy = 2:(ny_F-1)
+        arr_F[iy, :, :] .= 0.5 * (arr[iy, :, :] + arr[iy-1, :, :])
     end
 
     # Swap Mode
@@ -285,8 +290,8 @@ function y_F2y!(state::State)
     arr[end, :, :] .= arr_F[end, :, :]
 
     # Transformation Loop
-    for iy in 2:(ny - 1)
-        arr[iy, :, :] = 2 * arr_F[iy, :, :] - arr[iy - 1, :, :]
+    for iy = 2:(ny-1)
+        arr[iy, :, :] = 2 * arr_F[iy, :, :] - arr[iy-1, :, :]
     end
 
     # Switch Mode
