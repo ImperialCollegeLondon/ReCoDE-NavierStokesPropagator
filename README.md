@@ -87,7 +87,7 @@ Solutions to the above can be found in `solutions`.
 2. Open the system terminal via VSCode and launch the Julia REPL via `julia`.
 3. Launch Julia `pkg` mode via pressing `]` in the Julia REPL.
 4. In the `pkg` mode, activate the package environment via `activate .`.
-5. Testing can be done by entering `test` in the REPL.
+5. Testing can be done by entering `test` in the REPL's pkg mode.
 <!-- An overview of the files and folder in the exemplar.
 Not all files and directories need to be listed, just the important
 sections of your project, like the learning material, the code, the tests, etc.
