@@ -85,7 +85,7 @@ Solutions to the above can be found in `solutions`.
 1. Clone the repository using `git clone https://github.com/ImperialCollegeLondon/ReCoDE-NavierStokesPropagator.git` and enter the repository directory via `cd ReCoDE-NavierStokesPropagator`.
 2. Open the system terminal via VSCode and launch the Julia REPL via `julia`.
 3. Launch Julia `pkg` mode via pressing `]` in the Julia REPL.
-4. In the `pkg` mode, activate the package environment via `activate .` .
+4. In the `pkg` mode, activate the package environment via `activate .`.
 5. Testing can be done by entering `test` in the REPL.
 <!-- An overview of the files and folder in the exemplar.
 Not all files and directories need to be listed, just the important
