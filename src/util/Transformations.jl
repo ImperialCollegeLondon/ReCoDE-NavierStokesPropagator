@@ -49,13 +49,18 @@ struct Transformer{T<:AbstractFloat}
     freq_kx_max::T
     freq_kz_max::T
 
-    function Transformer{T}(dir_wisdom::String, state::State{T}, domain::DomainDescriptor; wisdom_flag::String="measure", reset_wisdom::Bool=false, test_mode::Bool=false) where {T<:AbstractFloat}
-
+    function Transformer{T}(
+        dir_wisdom::String,
+        state::State{T},
+        domain::DomainDescriptor;
+        wisdom_flag::String="measure",
+        reset_wisdom::Bool=false,
+        test_mode::Bool=false,
+    ) where {T<:AbstractFloat}
         @info("--- Initialising Transformer ---")
 
         # Directory Check
         if (!test_mode)
-
             if (!isdir(dir_wisdom))
                 mkdir(dir_wisdom)
             end
@@ -64,26 +69,21 @@ struct Transformer{T<:AbstractFloat}
                 @info("Loading FFTW wisdom from $(dir_wisdom).")
                 FFTW.import_wisdom(string(dir_wisdom, "/fft"))
             end
-
         end
 
         @info("Initiating FFTW wisdom planning.")
 
         # Planning
         @time begin
-
             fft_plan = plan_fft!(state.u, (2, 3); flags=wisdom_dict[wisdom_flag])
             ifft_plan = plan_bfft!(state.u, (2, 3); flags=wisdom_dict[wisdom_flag])
 
             fft_plan_F = plan_fft!(state.v_F, (2, 3); flags=wisdom_dict[wisdom_flag])
             ifft_plan_F = plan_bfft!(state.v_F, (2, 3); flags=wisdom_dict[wisdom_flag])
-
         end
 
         if (!test_mode)
-
             FFTW.export_wisdom(string(dir_wisdom, "/fft"))
-            
         end
 
         @info("FFTW wisdom planning complete.")
@@ -100,10 +100,17 @@ struct Transformer{T<:AbstractFloat}
         @info("--- Transformer initialised ---")
         @info(" ")
 
-        return new{T}(fft_plan, ifft_plan, fft_plan_F, ifft_plan_F, freq_kx, freq_kz, freq_kx_max, freq_kz_max)
-
+        return new{T}(
+            fft_plan,
+            ifft_plan,
+            fft_plan_F,
+            ifft_plan_F,
+            freq_kx,
+            freq_kz,
+            freq_kx_max,
+            freq_kz_max,
+        )
     end
-
 end
 
 #=
@@ -114,8 +121,10 @@ function physical2fourier!(tf::Transformer{T}, state::State{T}) where {T<:Abstra
 
     # Mode Check
     if (state.fourier_mode)
-        @debug("Applying a physical2fourier! fftw transformation when fourier_mode = $(state.fourier_mode).")
-        return
+        @debug(
+            "Applying a physical2fourier! fftw transformation when fourier_mode = $(state.fourier_mode)."
+        )
+        return nothing
     end
 
     # FFT
@@ -140,42 +149,32 @@ function physical2fourier!(tf::Transformer{T}, state::State{T}) where {T<:Abstra
     state.fourier_mode = true
 
     return nothing
-
 end
 
-function physical2fourier!(tf::Transformer{T}, arr::Array{Complex{T},3}, frac_mode::Bool, dealias_mode::Bool) where {T<:AbstractFloat}
+function physical2fourier!(
+    tf::Transformer{T}, arr::Array{Complex{T},3}, frac_mode::Bool, dealias_mode::Bool
+) where {T<:AbstractFloat}
 
     # FFT
     if (frac_mode)
-
         tf.fft_plan_F * arr
 
     else
-
         tf.fft_plan * arr
-
     end
 
     # De-aliasing
     if (dealias_mode)
-        for ix = 1:nx
-
+        for ix in 1:nx
             if (abs(tf.freq_kx[ix]) > tf.freq_kx_max)
-
                 arr[:, ix, :] .= 0.0 + 0.0im
-
             end
-
         end
 
-        for iz = 1:nz
-
+        for iz in 1:nz
             if (abs(tf.freq_kz[iz]) > tf.freq_kz_max)
-
                 arr[:, :, iz] .= 0.0 + 0.0im
-
             end
-
         end
     end
 
@@ -185,15 +184,16 @@ function physical2fourier!(tf::Transformer{T}, arr::Array{Complex{T},3}, frac_mo
     arr[:] ./= n
 
     return nothing
-
 end
 
 function fourier2physical!(tf::Transformer{T}, state::State{T}) where {T<:AbstractFloat}
 
     # Mode Check
     if (!state.fourier_mode)
-        @debug("Applying a fourier2physical! fftw transformation when fourier_mode = $(state.fourier_mode).")
-        return
+        @debug(
+            "Applying a fourier2physical! fftw transformation when fourier_mode = $(state.fourier_mode)."
+        )
+        return nothing
     end
 
     # IFFT
@@ -215,26 +215,23 @@ function fourier2physical!(tf::Transformer{T}, state::State{T}) where {T<:Abstra
     state.v_F[:] = real(state.v_F[:])
 
     return nothing
-
 end
 
-function fourier2physical!(tf::Transformer{T}, arr::Array{Complex{T},3}, frac_mode::Bool) where {T<:AbstractFloat}
+function fourier2physical!(
+    tf::Transformer{T}, arr::Array{Complex{T},3}, frac_mode::Bool
+) where {T<:AbstractFloat}
 
     # IFFT
     if (frac_mode)
-
         tf.ifft_plan_F * arr
 
     else
-
         tf.ifft_plan * arr
-
     end
 
     arr[:] = real(arr[:])
 
     return nothing
-
 end
 
 #=
@@ -242,10 +239,9 @@ Grid Transformation
 =#
 
 function y2y_F!(state::State{T}) where {T<:AbstractFloat}
-
     if (state.frac_mode)
         @debug("Applying a y2y_F! grid transformation when frac_mode = $(state.frac_mode).")
-        return
+        return nothing
     end
 
     # Array
@@ -259,24 +255,20 @@ function y2y_F!(state::State{T}) where {T<:AbstractFloat}
     arr_F[1, :, :] .= arr[1, :, :]
     arr_F[end, :, :] .= arr[end, :, :]
 
-    for iy = 2:ny_F-1
-
-        arr_F[iy, :, :] .= 0.5 * (arr[iy, :, :] + arr[iy-1, :, :])
-
+    for iy in 2:(ny_F - 1)
+        arr_F[iy, :, :] .= 0.5 * (arr[iy, :, :] + arr[iy - 1, :, :])
     end
 
     # Swap Mode
     state.frac_mode = true
 
     return nothing
-
 end
 
 function y_F2y!(state::State)
-
     if (!state.frac_mode)
         @debug("Applying a y_F2y! grid transformation when frac_mode = $(state.frac_mode).")
-        return
+        return nothing
     end
 
     # Array
@@ -293,17 +285,14 @@ function y_F2y!(state::State)
     arr[end, :, :] .= arr_F[end, :, :]
 
     # Transformation Loop
-    for iy = 2:ny-1
-
-        arr[iy, :, :] = 2 * arr_F[iy, :, :] - arr[iy-1, :, :]
-
+    for iy in 2:(ny - 1)
+        arr[iy, :, :] = 2 * arr_F[iy, :, :] - arr[iy - 1, :, :]
     end
 
     # Switch Mode
     state.frac_mode = false
 
     return nothing
-
 end
 
 end

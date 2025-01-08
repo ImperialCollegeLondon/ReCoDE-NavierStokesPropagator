@@ -18,7 +18,6 @@ Test Set
 
     @test length(domain.y_F) == length(domain.y) + 1
     @test length(domain.dy_F) == length(domain.y_F) - 1
-
 end
 
 @testset "DomainDescriptor Values" begin
@@ -45,5 +44,4 @@ end
 
     domain_odd::DomainDescriptor = DomainDescriptor{Float64}(10, 11, 10, 10.0, 2.0, 10.0)
     @test domain_odd.y[6] == 0.0
-
 end

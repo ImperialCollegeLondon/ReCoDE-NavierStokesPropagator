@@ -24,5 +24,4 @@ Test Set
     @test length(state.vv_bar) == 10
     @test length(state.vw_bar) == 10
     @test length(state.ww_bar) == 10
-
 end
