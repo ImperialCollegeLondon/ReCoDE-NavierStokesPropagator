@@ -61,7 +61,8 @@ Here are some examples:
 ### System
 
 - Julia 1.11 installed. [Download here](https://julialang.org/downloads/).
-- VSCode installed [here](https://code.visualstudio.com/Download) with Julia Language Support extension installed.
+- Install [VS Code](https://code.visualstudio.com/Download) on your system.
+- Install [Julia language extension](https://code.visualstudio.com/docs/languages/julia) on VS Code.
 <!-- Instructions on how the student should start going through the exemplar.
 
 Structure this section as you see fit but try to be clear, concise and accurate
