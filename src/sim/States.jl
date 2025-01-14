@@ -51,25 +51,37 @@ mutable struct State{T<:AbstractFloat}
     u_tau_lwr::T # Lower Wall Shear Stress
 
     function State{T}(T_sim::T, nx::Int64, ny::Int64, nz::Int64) where {T<:AbstractFloat}
-
         @info("--- Initialising State ---")
         @info("--- State initialised ---")
         @info(" ")
 
-        return new{T}(0.0, T_sim, 0,
+        return new{T}(
+            0.0,
+            T_sim,
+            0,
             zeros(Complex{T}, (ny, nx, nz)), # Velocity-Pressure State
             zeros(Complex{T}, (ny, nx, nz)),
             zeros(Complex{T}, (ny + 1, nx, nz)),
             zeros(Complex{T}, (ny, nx, nz)),
             zeros(Complex{T}, (ny, nx, nz)),
-            false, false,
+            false,
+            false,
             0, # Statistical State
-            zeros(T, (ny)), zeros(T, (ny)), zeros(T, (ny)),
-            zeros(T, (ny)), zeros(T, (ny)), zeros(T, (ny)), zeros(T, (ny)), zeros(T, (ny)), zeros(T, (ny)),
-            0.0, 0.0, 0.0, 0.0) # Flow Attribute
-
+            zeros(T, (ny)),
+            zeros(T, (ny)),
+            zeros(T, (ny)),
+            zeros(T, (ny)),
+            zeros(T, (ny)),
+            zeros(T, (ny)),
+            zeros(T, (ny)),
+            zeros(T, (ny)),
+            zeros(T, (ny)),
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        ) # Flow Attribute
     end
-
 end
 
 end

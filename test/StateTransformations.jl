@@ -17,7 +17,13 @@ Test Set
     state::State = State{Float64}(10.0, nx, ny, nz)
 
     # Initialise Transformation
-    tf::Transformer = Transformer{Float64}("test/fftw_wisdom", state, domain; wisdom_flag="exhaustive", test_mode=true)
+    tf::Transformer = Transformer{Float64}(
+        "test/fftw_wisdom",
+        state,
+        domain;
+        wisdom_flag = "exhaustive",
+        test_mode = true,
+    )
 
     # Random Array
     state.v[:] = rand(Float64, grid_physical)
@@ -45,5 +51,4 @@ Test Set
 
     # Inversion Check
     @test pl_v[:] ≈ state.v[:]
-
 end

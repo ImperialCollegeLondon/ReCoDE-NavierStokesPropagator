@@ -43,13 +43,21 @@ struct DomainDescriptor{T<:AbstractFloat}
     dy::Vector{T}
     dy_F::Vector{T}
 
-    function DomainDescriptor{T}(nx::Int64, ny::Int64, nz::Int64, Lx::T, Ly::T, Lz::T) where {T<:AbstractFloat}
-
+    function DomainDescriptor{T}(
+        nx::Int64,
+        ny::Int64,
+        nz::Int64,
+        Lx::T,
+        Ly::T,
+        Lz::T,
+    ) where {T<:AbstractFloat}
         function define_grid!(domain::DomainDescriptor)
 
             # Periodic Direction
-            domain.x[:] = range(start=0.0, stop=domain.Lx, step=domain.dx)[1:end-1]
-            domain.z[:] = range(start=0.0, stop=domain.Lz, step=domain.dz)[1:end-1]
+            domain.x[:] =
+                range(; start = 0.0, stop = domain.Lx, step = domain.dx)[1:(end-1)]
+            domain.z[:] =
+                range(; start = 0.0, stop = domain.Lz, step = domain.dz)[1:(end-1)]
 
             # Wall-Normal Direction (Base Grid)
             for i in eachindex(domain.y)
@@ -57,7 +65,7 @@ struct DomainDescriptor{T<:AbstractFloat}
             end
 
             # Wall-Normal Direction (Fractional Grid)
-            for i = 2:domain.ny_F-1
+            for i = 2:(domain.ny_F-1)
                 domain.y_F[i] = 0.5 * (domain.y[i] + domain.y[i-1])
             end
 
@@ -85,7 +93,6 @@ struct DomainDescriptor{T<:AbstractFloat}
             @info("Wall-normal grid definition completed.")
 
             return nothing
-
         end
 
         @info("--- Initialising DomainDescriptor ---")
@@ -105,7 +112,8 @@ struct DomainDescriptor{T<:AbstractFloat}
         dz::T = Lz / nz
 
         # Initialise
-        domain::DomainDescriptor = new{T}(nx, ny, ny_F, nz, Lx, Ly, Lz, dx, dz, x, z, y, y_F, dy, dy_F)
+        domain::DomainDescriptor =
+            new{T}(nx, ny, ny_F, nz, Lx, Ly, Lz, dx, dz, x, z, y, y_F, dy, dy_F)
 
         # Define Grid
         define_grid!(domain)
@@ -114,9 +122,7 @@ struct DomainDescriptor{T<:AbstractFloat}
         @info(" ")
 
         return domain
-
     end
-
 end
 
 end
