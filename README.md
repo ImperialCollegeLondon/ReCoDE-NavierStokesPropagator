@@ -1,25 +1,22 @@
 <!-- Your Project title, make it sound catchy! -->
 
-# Project title
+# Navier-Stokes Propagator
 
 <!-- Provide a short description to your project -->
 
 ## Description
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vitae pulvinar
-mauris. Praesent sollicitudin rutrum mauris sed congue. Donec vel orci elit.
-Phasellus luctus sodales elementum. Donec lacinia semper lorem, volutpat
-molestie arcu bibendum mollis. Nulla nec massa vitae sapien varius vulputate
-vel vitae ex. Curabitur convallis iaculis elit at faucibus. Sed eget facilisis
-orci, ut consequat neque.
+The repository contains source files for a Julia package written to solve the chaotic Navier-Stokes equations. The project aims to exemplify the improvement of simulation code quality using good programming abstractions (Julia Structs) and defining sensible simulation constructs that reflect each core component of the simulation. Additionally, the repository adopts good programming practices by implementing detailed documentation with tests written for each simulation construct.
+
+The algorithm used here is inspired from [Diablo](https://github.com/johnryantaylor/DIABLO), written by John R. Taylor, with minor modifications to the mesh spacing.
 
 <!-- What should the students going through your exemplar learn -->
 
 ## Learning Outcomes
 
-- Skill 1
-- Skill 2
-- Skill 3
+- Ability to distinguish and compartmentalise a multi-facet simulation algorithm into sensible simulation constructs via the implementation with Julia Structs 
+- Adopting good testing methodologies, through implementation of unit and integration tests
+- Understanding the FFTW and HDF5 libraries and their abstraction through the usage of utility modules in their respective source files
 
 <!-- How long should they spend reading and practising using your Code.
 Provide your best estimate -->
@@ -40,8 +37,12 @@ List any resources you would recommend to get the students started.
 If there is an existing exemplar in the ReCoDE repositories link to that.
 -->
 
-### Academic
+### Theoretical
+- Exploring Fourier series and its relation to the discrete Fourier transform
+- Understanding of the finite difference method for approximating spatial derivatives and the use of implicit/explicit time-stepping schemes
+- Familiarity with Julia. The Early Career Researcher Institute also provides an [Introduction to Julia](https://www.imperial.ac.uk/students/academic-support/graduate-school/professional-development/doctoral-students/research-computing-data-science/courses/introduction-to-julia/) course.
 
+Note : The theoretical understanding of the finite difference method, Fourier series and the time-stepping scheme are not a major necessity. An understanding of the mathematical structure for algorithimic implementation is sufficient to understand the ideas discussed in this tutorial.
 <!-- List the system requirements and how to obtain them, that can be as simple
 as adding a hyperlink to as detailed as writting step-by-step instructions.
 How detailed the instructions should be will vary on a case-by-case basis.
@@ -59,6 +60,9 @@ Here are some examples:
 
 ### System
 
+- Install [Julia](https://julialang.org/downloads/) on your system.
+- Install [VS Code](https://code.visualstudio.com/Download) on your system.
+- Install [Julia language extension](https://code.visualstudio.com/docs/languages/julia) on VS Code.
 <!-- Instructions on how the student should start going through the exemplar.
 
 Structure this section as you see fit but try to be clear, concise and accurate
@@ -79,6 +83,11 @@ Solutions to the above can be found in `solutions`.
 
 ## Getting Started
 
+1. Clone the repository using `git clone https://github.com/ImperialCollegeLondon/ReCoDE-NavierStokesPropagator.git` and enter the repository directory via `cd ReCoDE-NavierStokesPropagator`.
+2. Open the system terminal via VSCode and launch the Julia REPL via `julia`.
+3. Launch Julia `pkg` mode via pressing `]` in the Julia REPL.
+4. In the `pkg` mode, activate the package environment via `activate .`.
+5. Testing can be done by entering `test` in the REPL's pkg mode.
 <!-- An overview of the files and folder in the exemplar.
 Not all files and directories need to be listed, just the important
 sections of your project, like the learning material, the code, the tests, etc.
