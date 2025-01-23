@@ -53,9 +53,9 @@ struct Transformer{T<:AbstractFloat}
         dir_wisdom::String,
         state::State{T},
         domain::DomainDescriptor;
-        wisdom_flag::String = "measure",
-        reset_wisdom::Bool = false,
-        test_mode::Bool = false,
+        wisdom_flag::String="measure",
+        reset_wisdom::Bool=false,
+        test_mode::Bool=false,
     ) where {T<:AbstractFloat}
         @info("--- Initialising Transformer ---")
 
@@ -75,11 +75,11 @@ struct Transformer{T<:AbstractFloat}
 
         # Planning
         @time begin
-            fft_plan = plan_fft!(state.u, (2, 3); flags = wisdom_dict[wisdom_flag])
-            ifft_plan = plan_bfft!(state.u, (2, 3); flags = wisdom_dict[wisdom_flag])
+            fft_plan = plan_fft!(state.u, (2, 3); flags=wisdom_dict[wisdom_flag])
+            ifft_plan = plan_bfft!(state.u, (2, 3); flags=wisdom_dict[wisdom_flag])
 
-            fft_plan_F = plan_fft!(state.v_F, (2, 3); flags = wisdom_dict[wisdom_flag])
-            ifft_plan_F = plan_bfft!(state.v_F, (2, 3); flags = wisdom_dict[wisdom_flag])
+            fft_plan_F = plan_fft!(state.v_F, (2, 3); flags=wisdom_dict[wisdom_flag])
+            ifft_plan_F = plan_bfft!(state.v_F, (2, 3); flags=wisdom_dict[wisdom_flag])
         end
 
         if (!test_mode)
@@ -117,6 +117,9 @@ end
 FFT Transformation
 =#
 
+"""
+Converts the physical representation of State arrays to frequency domain via FFT.
+"""
 function physical2fourier!(tf::Transformer{T}, state::State{T}) where {T<:AbstractFloat}
 
     # Mode Check
@@ -151,6 +154,9 @@ function physical2fourier!(tf::Transformer{T}, state::State{T}) where {T<:Abstra
     return nothing
 end
 
+"""
+Converts the physical representation of State arrays to frequency domain via FFT for a specfic array.
+"""
 function physical2fourier!(
     tf::Transformer{T},
     arr::Array{Complex{T},3},
@@ -189,6 +195,9 @@ function physical2fourier!(
     return nothing
 end
 
+"""
+Converts the frequency domain representation of State arrays to physical domain via iFFT.
+"""
 function fourier2physical!(tf::Transformer{T}, state::State{T}) where {T<:AbstractFloat}
 
     # Mode Check
@@ -220,6 +229,9 @@ function fourier2physical!(tf::Transformer{T}, state::State{T}) where {T<:Abstra
     return nothing
 end
 
+"""
+Converts the frequency domain representation of State arrays to physical domain via iFFT for a specfic array.
+"""
 function fourier2physical!(
     tf::Transformer{T},
     arr::Array{Complex{T},3},
@@ -243,6 +255,9 @@ end
 Grid Transformation
 =#
 
+"""
+Transforms the grid representation of wall-normal velocity from physical to fractional grid.
+"""
 function y2y_F!(state::State{T}) where {T<:AbstractFloat}
     if (state.frac_mode)
         @debug("Applying a y2y_F! grid transformation when frac_mode = $(state.frac_mode).")
@@ -270,6 +285,9 @@ function y2y_F!(state::State{T}) where {T<:AbstractFloat}
     return nothing
 end
 
+"""
+Transforms the grid representation of wall-normal velocity from fractional to physical grid.
+"""
 function y_F2y!(state::State)
     if (!state.frac_mode)
         @debug("Applying a y_F2y! grid transformation when frac_mode = $(state.frac_mode).")

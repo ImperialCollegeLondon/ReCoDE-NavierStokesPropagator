@@ -55,9 +55,9 @@ struct DomainDescriptor{T<:AbstractFloat}
 
             # Periodic Direction
             domain.x[:] =
-                range(; start = 0.0, stop = domain.Lx, step = domain.dx)[1:(end-1)]
+                range(; start=0.0, stop=domain.Lx, step=domain.dx)[1:(end-1)]
             domain.z[:] =
-                range(; start = 0.0, stop = domain.Lz, step = domain.dz)[1:(end-1)]
+                range(; start=0.0, stop=domain.Lz, step=domain.dz)[1:(end-1)]
 
             # Wall-Normal Direction (Base Grid)
             for i in eachindex(domain.y)
