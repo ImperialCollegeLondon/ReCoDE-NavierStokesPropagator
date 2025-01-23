@@ -1,0 +1,3 @@
+var documenterSearchIndex = {"docs":
+[{"location":"","page":"-","title":"-","text":"<!– This includes your top-level README as you index page i.e. homepage.","category":"page"},{"location":"","page":"-","title":"-","text":"This will not be the best approach for all exemplars, so feel free to customise your index page as you see fit. –>","category":"page"},{"location":"","page":"-","title":"-","text":"{% include-markdown \"../README.md\"","category":"page"},{"location":"","page":"-","title":"-","text":"%}","category":"page"},{"location":"","page":"-","title":"-","text":"<!– Add more files in the docs/ directory for them to be automatically included in the Mkdocs documentation –>","category":"page"}]
+}
