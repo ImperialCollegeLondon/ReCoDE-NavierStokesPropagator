@@ -10,5 +10,13 @@ include-markdown "../README.md"
 
 %}
 
+```@docs
+physical2fourier!(tf::Transformer{T}, state::State{T}) where {T<:AbstractFloat}
+```
+
+```@docs
+physical2fourier!(tf::Transformer{T}, arr::Array{Complex{T},3}, frac_mode::Bool, dealias_mode::Bool) where {T<:AbstractFloat}
+```
+
 <!-- Add more files in the `docs/` directory for them to be automatically
 included in the Mkdocs documentation -->

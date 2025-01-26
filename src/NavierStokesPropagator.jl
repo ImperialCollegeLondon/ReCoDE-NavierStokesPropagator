@@ -28,11 +28,17 @@ using .Transformations
 using Random
 
 #=
-Export
+Public API
 =#
 
+export DomainDescriptor
+
+export State
+
+export Transformer
+export y2y_F!, y_F2y!
+export physical2fourier!, fourier2physical!
+
 export NavierStokesPropagator
-export DomainDescriptor, State
-export InputOutputManager, Transformer
 
 end
