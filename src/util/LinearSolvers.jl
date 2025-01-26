@@ -4,8 +4,6 @@ module LinearSolvers
 Packages
 =#
 
-using HDF5
-
 using ..DomainDescriptors: DomainDescriptor
 using ..SimulationConditions: SimulationCondition
 using ..States: State
@@ -22,7 +20,9 @@ export define_sys_pressure!, solve_sys_pressure_update!, solve_sys_pressure_pois
 #=
 LinearSolver
 =#
-
+"""
+TriDiagonalMatrix is an encapsulation of the required data to represent a tri-diagonal matrix.
+"""
 struct TriDiagonalMatrix{T<:Number}
 
     # Tri-Diagonal Matrix
@@ -70,6 +70,10 @@ end
 Thomas Algorithm
 =#
 
+"""
+Solve a Tridiagonal system of linear equations with 1 on the main diagonal 
+and upper/lower off-diagonals with real floating-point values.
+"""
 function solve_system_R!(
     sys::TriDiagonalMatrix{T},
     R::Vector{T},
@@ -107,6 +111,10 @@ function solve_system_R!(
 
 end
 
+"""
+Solve a Tridiagonal system of linear equations with non-zero values on the main diagonal 
+and upper/lower off-diagonals with complex floating-point values.
+"""
 function solve_system_C!(
     sys::TriDiagonalMatrix{Complex{T}},
     R::Vector{Complex{T}},
@@ -149,6 +157,9 @@ Intermediate Runge-Kutta Wall-Normal Velocity
 =#
 
 # System Definition
+"""
+Define the tridiagonal matrix 
+"""
 function define_sys_inter_v!(
     sys::TriDiagonalMatrix{T},
     domain::DomainDescriptor,
@@ -187,13 +198,13 @@ function solve_sys_inter_v!(
     sys.D[1] = 1.0
     sys.L[1] = 0.0
     sys.U[1] = 0.0
-    R[1] = sim_cond.bound_cond[(vel = 'v', wall = 'l')]
+    R[1] = sim_cond.bound_cond[(vel='v', wall='l')]
 
     # Apply Boundary Condition (Upper Wall)
     sys.D[end] = 1.0
     sys.L[end] = 0.0
     sys.U[end] = 0.0
-    R[end] = sim_cond.bound_cond[(vel = 'v', wall = 'u')]
+    R[end] = sim_cond.bound_cond[(vel='v', wall='u')]
 
     # Solve System
     solve_system_R!(sys, R, sol)
@@ -242,13 +253,13 @@ function solve_sys_inter_uw!(
     sys.D[1] = 1.0
     sys.L[1] = 0.0
     sys.U[1] = 0.0
-    R[1] = sim_cond.bound_cond[(vel = vel_comp, wall = 'l')]
+    R[1] = sim_cond.bound_cond[(vel=vel_comp, wall='l')]
 
     # Apply Boundary Condition (Upper Wall)
     sys.D[end] = 1.0
     sys.L[end] = 0.0
     sys.U[end] = 0.0
-    R[end] = sim_cond.bound_cond[(vel = vel_comp, wall = 'u')]
+    R[end] = sim_cond.bound_cond[(vel=vel_comp, wall='u')]
 
     # Solve System
     solve_system_R!(sys, R, sol)

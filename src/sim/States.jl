@@ -15,7 +15,10 @@ export State
 #=
 State
 =#
-
+"""
+State are where the simulation time, velocity-pressure primitive and statistical states are stored
+as the simulation evolves.
+"""
 mutable struct State{T<:AbstractFloat}
 
     # Simulation Time
