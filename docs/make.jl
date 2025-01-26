@@ -1,5 +1,16 @@
+# Documenter make.jl
+
+#=
+Package
+=#
+
 include("../src/NavierStokesPropagator.jl")
 using .NavierStokesPropagator
+
 using Documenter
 
-makedocs(sitename="Navier-Stokes Propagator")
+#=
+Make Documenter
+=#
+
+makedocs(sitename = "Navier-Stokes Propagator")
