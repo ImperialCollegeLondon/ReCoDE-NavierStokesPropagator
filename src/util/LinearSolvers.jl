@@ -198,13 +198,13 @@ function solve_sys_inter_v!(
     sys.D[1] = 1.0
     sys.L[1] = 0.0
     sys.U[1] = 0.0
-    R[1] = sim_cond.bound_cond[(vel='v', wall='l')]
+    R[1] = sim_cond.bound_cond[(vel = 'v', wall = 'l')]
 
     # Apply Boundary Condition (Upper Wall)
     sys.D[end] = 1.0
     sys.L[end] = 0.0
     sys.U[end] = 0.0
-    R[end] = sim_cond.bound_cond[(vel='v', wall='u')]
+    R[end] = sim_cond.bound_cond[(vel = 'v', wall = 'u')]
 
     # Solve System
     solve_system_R!(sys, R, sol)
@@ -253,13 +253,13 @@ function solve_sys_inter_uw!(
     sys.D[1] = 1.0
     sys.L[1] = 0.0
     sys.U[1] = 0.0
-    R[1] = sim_cond.bound_cond[(vel=vel_comp, wall='l')]
+    R[1] = sim_cond.bound_cond[(vel = vel_comp, wall = 'l')]
 
     # Apply Boundary Condition (Upper Wall)
     sys.D[end] = 1.0
     sys.L[end] = 0.0
     sys.U[end] = 0.0
-    R[end] = sim_cond.bound_cond[(vel=vel_comp, wall='u')]
+    R[end] = sim_cond.bound_cond[(vel = vel_comp, wall = 'u')]
 
     # Solve System
     solve_system_R!(sys, R, sol)

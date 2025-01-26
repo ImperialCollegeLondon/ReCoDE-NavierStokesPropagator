@@ -137,16 +137,16 @@ function planeCouetteFlow(init_cond::Char, init_kick::T) where {T<:AbstractFloat
     bound_cond::Dict{BoundTuple,T} = Dict()
 
     # u
-    bound_cond[(vel='u', wall='l')] = -1.0
-    bound_cond[(vel='u', wall='u')] = 1.0
+    bound_cond[(vel = 'u', wall = 'l')] = -1.0
+    bound_cond[(vel = 'u', wall = 'u')] = 1.0
 
     # v
-    bound_cond[(vel='v', wall='l')] = 0.0
-    bound_cond[(vel='v', wall='u')] = 0.0
+    bound_cond[(vel = 'v', wall = 'l')] = 0.0
+    bound_cond[(vel = 'v', wall = 'u')] = 0.0
 
     # w
-    bound_cond[(vel='w', wall='l')] = 0.0
-    bound_cond[(vel='w', wall='u')] = 0.0
+    bound_cond[(vel = 'w', wall = 'l')] = 0.0
+    bound_cond[(vel = 'w', wall = 'u')] = 0.0
 
     return SimulationCondition{T}(
         init_cond,
@@ -183,16 +183,16 @@ function planePoiseuilleFlow(
     bound_cond::Dict{BoundTuple,T} = Dict()
 
     # u
-    bound_cond[(vel='u', wall='l')] = 0.0
-    bound_cond[(vel='u', wall='u')] = 0.0
+    bound_cond[(vel = 'u', wall = 'l')] = 0.0
+    bound_cond[(vel = 'u', wall = 'u')] = 0.0
 
     # v
-    bound_cond[(vel='v', wall='l')] = 0.0
-    bound_cond[(vel='v', wall='u')] = 0.0
+    bound_cond[(vel = 'v', wall = 'l')] = 0.0
+    bound_cond[(vel = 'v', wall = 'u')] = 0.0
 
     # w
-    bound_cond[(vel='w', wall='l')] = 0.0
-    bound_cond[(vel='w', wall='u')] = 0.0
+    bound_cond[(vel = 'w', wall = 'l')] = 0.0
+    bound_cond[(vel = 'w', wall = 'u')] = 0.0
 
     return SimulationCondition{T}(
         init_cond,
