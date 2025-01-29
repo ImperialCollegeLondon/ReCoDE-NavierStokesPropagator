@@ -1,22 +1,29 @@
-name: Publish MkDocs
+name: Documentation
+
 on:
   push:
     branches:
       - main
+
 jobs:
-  deploy:
-    name: Deploy Mkdocs to gh-pages branch
+  build:
+    permissions:
+      actions: write
+      contents: write
+      pull-requests: read
+      statuses: write
     runs-on: ubuntu-latest
     steps:
-      - name: Get repository
-        uses: actions/checkout@v4
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
         with:
-          python-version: 3.12
+          version: '1'
+      - uses: julia-actions/cache@v2
+      - name: Move README
+        run: cp README.md docs/src/index.md
       - name: Install dependencies
-        run: pip install -r requirements.txt
-      - name: Copy notebooks into docs
-        run: cp -r notebooks/* docs/ | echo "No notebooks found"
-      - name: Deploy Mkdocs
-        run: mkdocs gh-deploy --force
+        run: julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
+      - name: Build and deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # If authenticating with GitHub Actions token
+        run: julia --project=docs/ docs/make.jl
