@@ -4,8 +4,8 @@
 Package
 =#
 
-include("../src/NavierStokesPropagator.jl")
-using .NavierStokesPropagator
+include("../src/NavierStokesPropagators.jl")
+using .NavierStokesPropagators
 
 using Documenter
 
