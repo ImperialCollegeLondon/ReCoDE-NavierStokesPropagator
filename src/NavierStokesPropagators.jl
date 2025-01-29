@@ -371,22 +371,22 @@ function init_flowfield!(
 
     # Enforce Boundary Condition
     state.u[1, :, :] .= 0.0
-    state.u[1, 1, 1] = sim_cond.bound_cond[(vel='u', wall='l')]
+    state.u[1, 1, 1] = sim_cond.bound_cond[(vel = 'u', wall = 'l')]
 
     state.u[end, :, :] .= 0.0
-    state.u[end, 1, 1] = sim_cond.bound_cond[(vel='u', wall='u')]
+    state.u[end, 1, 1] = sim_cond.bound_cond[(vel = 'u', wall = 'u')]
 
     state.v[1, :, :] .= 0.0
-    state.v[1, 1, 1] = sim_cond.bound_cond[(vel='v', wall='l')]
+    state.v[1, 1, 1] = sim_cond.bound_cond[(vel = 'v', wall = 'l')]
 
     state.v[end, :, :] .= 0.0
-    state.v[end, 1, 1] = sim_cond.bound_cond[(vel='v', wall='u')]
+    state.v[end, 1, 1] = sim_cond.bound_cond[(vel = 'v', wall = 'u')]
 
     state.w[1, :, :] .= 0.0
-    state.w[1, 1, 1] = sim_cond.bound_cond[(vel='w', wall='l')]
+    state.w[1, 1, 1] = sim_cond.bound_cond[(vel = 'w', wall = 'l')]
 
     state.w[end, :, :] .= 0.0
-    state.w[end, 1, 1] = sim_cond.bound_cond[(vel='w', wall='u')]
+    state.w[end, 1, 1] = sim_cond.bound_cond[(vel = 'w', wall = 'u')]
 
     return nothing
 
