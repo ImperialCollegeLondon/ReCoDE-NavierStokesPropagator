@@ -1,4 +1,4 @@
-name = "NavierStokesPropagator"
+name = "NavierStokesPropagators"
 uuid = "0053f5ce-4848-4e9f-8975-9c31ffb271f1"
 authors = ["Zhao <weezhao@live.com>"]
 version = "0.1.0"
