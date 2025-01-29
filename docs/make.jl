@@ -18,3 +18,7 @@ makedocs(sitename = "Navier-Stokes Propagator", pages = [
     #"Simulation Constructs" => Any["sim/States.md",],
     #"Simulation Utilities" => Any["util/LinearSolvers.md", "util/Transformations.md"],
 ])
+
+deploydocs(
+    repo = "github.com/ImperialCollegeLondon/ReCoDE-NavierStokesPropagator.git",
+)
