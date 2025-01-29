@@ -122,4 +122,4 @@ in a tree node.
 
 ## License
 
-This project is licensed under the [BSD-3-Clause license](LICENSE.md)
+This project is licensed under the BSD-3-Clause license.
