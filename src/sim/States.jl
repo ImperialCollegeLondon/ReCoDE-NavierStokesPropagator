@@ -15,7 +15,14 @@ export State
 #=
 State
 =#
+"""
+State contains all required information that describes velocity-pressure states, and the statistical state of the simulation as it
+propagates forward in time.
 
+A safety feature of the State is the inclusion of the fourier-mode and frac-mode boolean variables. They are included to be checked
+ by method, making sure that the State are in the right boolean state. Public API in the Transformer module are used to switch between the
+ fourier and fractional modes.
+"""
 mutable struct State{T<:AbstractFloat}
 
     # Simulation Time
