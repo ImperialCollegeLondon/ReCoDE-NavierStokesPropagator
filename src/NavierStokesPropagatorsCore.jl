@@ -51,10 +51,7 @@ struct DynamicsArray{T<:AbstractFloat}
 end
 
 # Run Simulation
-function run_simulation!(ns::NavierStokesPropagator, log_io)
-
-    # Log File
-    flush(log_io)
+function run_simulation!(ns::NavierStokesPropagator)
 
     # Dynamics Array
     R::DynamicsArray = DynamicsArray{ns.FloatType}(ns.domain)
@@ -105,7 +102,9 @@ function run_simulation!(ns::NavierStokesPropagator, log_io)
         end
 
         # State / Statistics I/O
-        bool_stats_io::Bool = (mod(ns.state.nt, ns.io_m.freq_stats) == 0) && (ns.state.nt > ns.io_m.min_step_stats)
+        bool_stats_io::Bool =
+            (mod(ns.state.nt, ns.io_m.freq_stats) == 0) &&
+            (ns.state.nt > ns.io_m.min_step_stats)
         bool_state_io::Bool = (mod(ns.state.nt, ns.io_m.freq_state) == 0)
 
         if (bool_state_io) || (bool_stats_io)
@@ -220,10 +219,13 @@ function step!(ns::NavierStokesPropagator, R::DynamicsArray)
         # Runge-Kutta Prior Dynamics
         if (i_rk > 1)
 
-            R.IMEX_U[2:ny-1, :, :] += t_stepper.zeta[i_rk] * t_stepper.h_bar[i_rk] * dt * R.RK_U[2:ny-1, :, :]
-            R.IMEX_W[2:ny-1, :, :] += t_stepper.zeta[i_rk] * t_stepper.h_bar[i_rk] * dt * R.RK_W[2:ny-1, :, :]
+            R.IMEX_U[2:ny-1, :, :] +=
+                t_stepper.zeta[i_rk] * t_stepper.h_bar[i_rk] * dt * R.RK_U[2:ny-1, :, :]
+            R.IMEX_W[2:ny-1, :, :] +=
+                t_stepper.zeta[i_rk] * t_stepper.h_bar[i_rk] * dt * R.RK_W[2:ny-1, :, :]
 
-            R.IMEX_V[2:ny_F-1, :, :] += t_stepper.zeta[i_rk] * t_stepper.h_bar[i_rk] * dt * R.RK_V[2:ny_F-1, :, :]
+            R.IMEX_V[2:ny_F-1, :, :] +=
+                t_stepper.zeta[i_rk] * t_stepper.h_bar[i_rk] * dt * R.RK_V[2:ny_F-1, :, :]
 
             R.RK_U[:] .= 0.0
             R.RK_V[:] .= 0.0
@@ -240,10 +242,20 @@ function step!(ns::NavierStokesPropagator, R::DynamicsArray)
             for ix = 1:domain.nx
 
                 # Turbulent Pressure Gradient
-                R.IMEX_U[2:ny-1, ix, iz] += -dt * t_stepper.h_bar[i_rk] * (1.0im * ns.tf.freq_kx[ix]) * state.p[2:ny-1, ix, iz]
-                R.IMEX_W[2:ny-1, ix, iz] += -dt * t_stepper.h_bar[i_rk] * (1.0im * ns.tf.freq_kz[iz]) * state.p[2:ny-1, ix, iz]
+                R.IMEX_U[2:ny-1, ix, iz] +=
+                    -dt *
+                    t_stepper.h_bar[i_rk] *
+                    (1.0im * ns.tf.freq_kx[ix]) *
+                    state.p[2:ny-1, ix, iz]
+                R.IMEX_W[2:ny-1, ix, iz] +=
+                    -dt *
+                    t_stepper.h_bar[i_rk] *
+                    (1.0im * ns.tf.freq_kz[iz]) *
+                    state.p[2:ny-1, ix, iz]
 
-                R.IMEX_V[2:ny_F-1, ix, iz] += -dt * t_stepper.h_bar[i_rk] .* (state.p[2:ny, ix, iz] - state.p[1:ny-1, ix, iz]) ./ domain.dy[:]
+                R.IMEX_V[2:ny_F-1, ix, iz] +=
+                    -dt * t_stepper.h_bar[i_rk] .*
+                    (state.p[2:ny, ix, iz] - state.p[1:ny-1, ix, iz]) ./ domain.dy[:]
 
                 # Homegenous Viscous Dissipation
                 freq::ns.FloatType = ns.tf.freq_kx[ix]^2 + ns.tf.freq_kz[iz]^2
@@ -302,7 +314,11 @@ function step!(ns::NavierStokesPropagator, R::DynamicsArray)
         for iz = 1:domain.nz
             for ix = 1:domain.nx
 
-                R.S_F[2:ny_F-1, ix, iz] = state.v_F[2:ny_F-1, ix, iz] .* (state.u[2:ny, ix, iz] .* domain.dy_F[2:ny] .+ state.u[1:ny-1, ix, iz] .* domain.dy_F[1:ny-1]) ./ (2.0 * domain.dy[1:ny-1])
+                R.S_F[2:ny_F-1, ix, iz] =
+                    state.v_F[2:ny_F-1, ix, iz] .* (
+                        state.u[2:ny, ix, iz] .* domain.dy_F[2:ny] .+
+                        state.u[1:ny-1, ix, iz] .* domain.dy_F[1:ny-1]
+                    ) ./ (2.0 * domain.dy[1:ny-1])
 
             end
         end
@@ -319,7 +335,11 @@ function step!(ns::NavierStokesPropagator, R::DynamicsArray)
         for iz = 1:domain.nz
             for ix = 1:domain.nx
 
-                R.S_F[2:ny_F-1, ix, iz] = state.v_F[2:ny_F-1, ix, iz] .* (state.w[2:ny, ix, iz] .* domain.dy_F[2:ny] .+ state.w[1:ny-1, ix, iz] .* domain.dy_F[1:ny-1]) ./ (2.0 * domain.dy[1:ny-1])
+                R.S_F[2:ny_F-1, ix, iz] =
+                    state.v_F[2:ny_F-1, ix, iz] .* (
+                        state.w[2:ny, ix, iz] .* domain.dy_F[2:ny] .+
+                        state.w[1:ny-1, ix, iz] .* domain.dy_F[1:ny-1]
+                    ) ./ (2.0 * domain.dy[1:ny-1])
 
             end
         end
@@ -336,8 +356,13 @@ function step!(ns::NavierStokesPropagator, R::DynamicsArray)
         for iz = 1:domain.nz
             for ix = 1:domain.nx
 
-                R.S[2:ny-1, ix, iz] = ((state.u[3:ny, ix, iz] + state.u[2:ny-1, ix, iz]) .* state.v_F[3:ny_F-1, ix, iz] -
-                                       (state.u[2:ny-1, ix, iz] + state.u[1:ny-2, ix, iz]) .* state.v_F[2:ny_F-2, ix, iz]) ./ (2 * domain.dy_F[2:ny-1])
+                R.S[2:ny-1, ix, iz] =
+                    (
+                        (state.u[3:ny, ix, iz] + state.u[2:ny-1, ix, iz]) .*
+                        state.v_F[3:ny_F-1, ix, iz] -
+                        (state.u[2:ny-1, ix, iz] + state.u[1:ny-2, ix, iz]) .*
+                        state.v_F[2:ny_F-2, ix, iz]
+                    ) ./ (2 * domain.dy_F[2:ny-1])
 
             end
         end
@@ -350,8 +375,13 @@ function step!(ns::NavierStokesPropagator, R::DynamicsArray)
         for iz = 1:domain.nz
             for ix = 1:domain.nx
 
-                R.S[2:ny-1, ix, iz] = ((state.w[3:ny, ix, iz] + state.w[2:ny-1, ix, iz]) .* state.v_F[3:ny_F-1, ix, iz] -
-                                       (state.w[2:ny-1, ix, iz] + state.w[1:ny-2, ix, iz]) .* state.v_F[2:ny_F-2, ix, iz]) ./ (2 * domain.dy_F[2:ny-1])
+                R.S[2:ny-1, ix, iz] =
+                    (
+                        (state.w[3:ny, ix, iz] + state.w[2:ny-1, ix, iz]) .*
+                        state.v_F[3:ny_F-1, ix, iz] -
+                        (state.w[2:ny-1, ix, iz] + state.w[1:ny-2, ix, iz]) .*
+                        state.v_F[2:ny_F-2, ix, iz]
+                    ) ./ (2 * domain.dy_F[2:ny-1])
 
             end
         end
@@ -364,8 +394,11 @@ function step!(ns::NavierStokesPropagator, R::DynamicsArray)
         for iz = 1:domain.nz
             for ix = 1:domain.nx
 
-                R.S_F[2:ny_F-1, ix, iz] = ((state.v_F[3:ny_F, ix, iz] + state.v_F[2:ny_F-1, ix, iz]) .^ 2 -
-                                           (state.v_F[2:ny_F-1, ix, iz] + state.v_F[1:ny_F-2, ix, iz]) .^ 2) ./ (4.0 * domain.dy[:])
+                R.S_F[2:ny_F-1, ix, iz] =
+                    (
+                        (state.v_F[3:ny_F, ix, iz] + state.v_F[2:ny_F-1, ix, iz]) .^ 2 -
+                        (state.v_F[2:ny_F-1, ix, iz] + state.v_F[1:ny_F-2, ix, iz]) .^ 2
+                    ) ./ (4.0 * domain.dy[:])
 
             end
         end
@@ -375,10 +408,13 @@ function step!(ns::NavierStokesPropagator, R::DynamicsArray)
         R.RK_V[2:ny_F-1] -= R.S_F[2:ny_F-1]
 
         # Assign Runge-Kutta Dynamics to IMEX Dynamics
-        R.IMEX_U[2:ny-1] += dt * t_stepper.h_bar[i_rk] * t_stepper.beta[i_rk] * R.RK_U[2:ny-1]
-        R.IMEX_W[2:ny-1] += dt * t_stepper.h_bar[i_rk] * t_stepper.beta[i_rk] * R.RK_W[2:ny-1]
+        R.IMEX_U[2:ny-1] +=
+            dt * t_stepper.h_bar[i_rk] * t_stepper.beta[i_rk] * R.RK_U[2:ny-1]
+        R.IMEX_W[2:ny-1] +=
+            dt * t_stepper.h_bar[i_rk] * t_stepper.beta[i_rk] * R.RK_W[2:ny-1]
 
-        R.IMEX_V[2:ny_F-1] += dt * t_stepper.h_bar[i_rk] * t_stepper.beta[i_rk] * R.RK_V[2:ny_F-1]
+        R.IMEX_V[2:ny_F-1] +=
+            dt * t_stepper.h_bar[i_rk] * t_stepper.beta[i_rk] * R.RK_V[2:ny_F-1]
 
         # Transformation Operation for IMEX Dynamics
         fourier2physical!(ns.tf, R.IMEX_U, false)
@@ -389,20 +425,40 @@ function step!(ns::NavierStokesPropagator, R::DynamicsArray)
         for iz = 1:domain.nz
             for ix = 1:domain.nx
 
-                R.IMEX_U[2:ny-1, ix, iz] += (sim_cond.nu * dt * t_stepper.h_bar[i_rk] / 2.0) * (
-                    ((state.u[3:ny, ix, iz] - state.u[2:ny-1, ix, iz]) ./ domain.dy[2:ny-1]) -
-                    ((state.u[2:ny-1, ix, iz] - state.u[1:ny-2, ix, iz]) ./ domain.dy[1:ny-2])
-                ) ./ domain.dy_F[2:ny-1]
+                R.IMEX_U[2:ny-1, ix, iz] +=
+                    (sim_cond.nu * dt * t_stepper.h_bar[i_rk] / 2.0) * (
+                        (
+                            (state.u[3:ny, ix, iz] - state.u[2:ny-1, ix, iz]) ./
+                            domain.dy[2:ny-1]
+                        ) - (
+                            (state.u[2:ny-1, ix, iz] - state.u[1:ny-2, ix, iz]) ./
+                            domain.dy[1:ny-2]
+                        )
+                    ) ./ domain.dy_F[2:ny-1]
 
-                R.IMEX_W[2:ny-1, ix, iz] += (sim_cond.nu * dt * t_stepper.h_bar[i_rk] / 2.0) * (
-                    ((state.w[3:ny, ix, iz] - state.w[2:ny-1, ix, iz]) ./ domain.dy[2:ny-1]) -
-                    ((state.w[2:ny-1, ix, iz] - state.w[1:ny-2, ix, iz]) ./ domain.dy[1:ny-2])
-                ) ./ domain.dy_F[2:ny-1]
+                R.IMEX_W[2:ny-1, ix, iz] +=
+                    (sim_cond.nu * dt * t_stepper.h_bar[i_rk] / 2.0) * (
+                        (
+                            (state.w[3:ny, ix, iz] - state.w[2:ny-1, ix, iz]) ./
+                            domain.dy[2:ny-1]
+                        ) - (
+                            (state.w[2:ny-1, ix, iz] - state.w[1:ny-2, ix, iz]) ./
+                            domain.dy[1:ny-2]
+                        )
+                    ) ./ domain.dy_F[2:ny-1]
 
 
-                R.IMEX_V[2:ny_F-1, ix, iz] += (sim_cond.nu * dt * t_stepper.h_bar[i_rk] / 2.0) * (
-                    ((state.v_F[3:ny_F, ix, iz] - state.v_F[2:ny_F-1, ix, iz,]) ./ domain.dy_F[2:ny]) ./ domain.dy[:] -
-                    ((state.v_F[2:ny_F-1, ix, iz] - state.v_F[1:ny_F-2, ix, iz]) ./ domain.dy_F[1:ny-1]) ./ domain.dy[:])
+                R.IMEX_V[2:ny_F-1, ix, iz] +=
+                    (sim_cond.nu * dt * t_stepper.h_bar[i_rk] / 2.0) * (
+                        (
+                            (state.v_F[3:ny_F, ix, iz] - state.v_F[2:ny_F-1, ix, iz]) ./
+                            domain.dy_F[2:ny]
+                        ) ./ domain.dy[:] -
+                        (
+                            (state.v_F[2:ny_F-1, ix, iz] - state.v_F[1:ny_F-2, ix, iz]) ./
+                            domain.dy_F[1:ny-1]
+                        ) ./ domain.dy[:]
+                    )
 
             end
         end
@@ -410,12 +466,23 @@ function step!(ns::NavierStokesPropagator, R::DynamicsArray)
         # Solve Intermediate Wall-Normal Velocity
         sol_v::Vector{ns.FloatType} = zeros(ns.FloatType, domain.ny_F)
 
-        define_sys_inter_v!(ns.solver.sys_inter_v, domain, sim_cond, dt, t_stepper.h_bar[i_rk])
+        define_sys_inter_v!(
+            ns.solver.sys_inter_v,
+            domain,
+            sim_cond,
+            dt,
+            t_stepper.h_bar[i_rk],
+        )
 
         for iz = 1:domain.nz
             for ix = 1:domain.nx
 
-                solve_sys_inter_v!(ns.solver.sys_inter_v, real(R.IMEX_V[:, ix, iz]), sol_v, sim_cond)
+                solve_sys_inter_v!(
+                    ns.solver.sys_inter_v,
+                    real(R.IMEX_V[:, ix, iz]),
+                    sol_v,
+                    sim_cond,
+                )
 
                 state.v_F[2:ny_F-1, ix, iz] = sol_v[2:ny_F-1]
 
@@ -426,13 +493,31 @@ function step!(ns::NavierStokesPropagator, R::DynamicsArray)
         sol_u::Vector{ns.FloatType} = zeros(ns.FloatType, domain.ny)
         sol_w::Vector{ns.FloatType} = zeros(ns.FloatType, domain.ny)
 
-        define_sys_inter_uw!(ns.solver.sys_inter_uw, domain, sim_cond, dt, t_stepper.h_bar[i_rk])
+        define_sys_inter_uw!(
+            ns.solver.sys_inter_uw,
+            domain,
+            sim_cond,
+            dt,
+            t_stepper.h_bar[i_rk],
+        )
 
         for iz = 1:domain.nz
             for ix = 1:domain.nx
 
-                solve_sys_inter_uw!(ns.solver.sys_inter_uw, real(R.IMEX_U[:, ix, iz]), sol_u, sim_cond, 'u')
-                solve_sys_inter_uw!(ns.solver.sys_inter_uw, real(R.IMEX_W[:, ix, iz]), sol_w, sim_cond, 'w')
+                solve_sys_inter_uw!(
+                    ns.solver.sys_inter_uw,
+                    real(R.IMEX_U[:, ix, iz]),
+                    sol_u,
+                    sim_cond,
+                    'u',
+                )
+                solve_sys_inter_uw!(
+                    ns.solver.sys_inter_uw,
+                    real(R.IMEX_W[:, ix, iz]),
+                    sol_w,
+                    sim_cond,
+                    'w',
+                )
 
                 state.u[2:ny-1, ix, iz] = sol_u[2:ny-1]
                 state.w[2:ny-1, ix, iz] = sol_w[2:ny-1]
@@ -470,7 +555,9 @@ function continuity_enforcement!(ns::NavierStokesPropagator, i_rk::Int64)
 
     if (!ns.state.fourier_mode)
 
-        @error("pressure_update function call with invalid fourier_mode = $(ns.state.fourier_mode).")
+        @error(
+            "pressure_update function call with invalid fourier_mode = $(ns.state.fourier_mode)."
+        )
         return
 
     end
@@ -496,8 +583,16 @@ function continuity_enforcement!(ns::NavierStokesPropagator, i_rk::Int64)
             define_sys_pressure!(ns.solver.sys_pressure, domain, kx, kz)
 
             # Solve
-            solve_sys_pressure_update!(ns.solver.sys_pressure, sol_p, domain, kx, kz,
-                state.u[:, ix, iz], state.v_F[:, ix, iz], state.w[:, ix, iz])
+            solve_sys_pressure_update!(
+                ns.solver.sys_pressure,
+                sol_p,
+                domain,
+                kx,
+                kz,
+                state.u[:, ix, iz],
+                state.v_F[:, ix, iz],
+                state.w[:, ix, iz],
+            )
 
             # Velocity Update
             state.u[2:ny-1, ix, iz] += -1.0im * kx * sol_p[2:ny-1]
@@ -507,7 +602,8 @@ function continuity_enforcement!(ns::NavierStokesPropagator, i_rk::Int64)
 
             # Pressure Update
             if (i_rk > 0)
-                state.p[:, ix, iz] += sol_p[:] / (ns.t_stepper.dt * ns.t_stepper.h_bar[i_rk])
+                state.p[:, ix, iz] +=
+                    sol_p[:] / (ns.t_stepper.dt * ns.t_stepper.h_bar[i_rk])
             end
 
         end
@@ -546,7 +642,9 @@ function pressure_poisson_solve(ns::NavierStokesPropagator)
             R_U[2:ny-1, ix, iz] = 1.0im * ns.tf.freq_kx[ix] * state.u[2:ny-1, ix, iz]
             R_W[2:ny-1, ix, iz] = 1.0im * ns.tf.freq_kz[iz] * state.w[2:ny-1, ix, iz]
 
-            R_V[2:ny-1, ix, iz] = (state.v_F[3:ny_F-1, ix, iz] - state.v_F[2:ny_F-2, ix, iz]) ./ domain.dy_F[2:ny-1]
+            R_V[2:ny-1, ix, iz] =
+                (state.v_F[3:ny_F-1, ix, iz] - state.v_F[2:ny_F-2, ix, iz]) ./
+                domain.dy_F[2:ny-1]
 
         end
     end
@@ -572,9 +670,14 @@ function pressure_poisson_solve(ns::NavierStokesPropagator)
     for iz = 1:domain.nz
         for ix = 1:domain.nx
 
-            R_U[2:ny-1, ix, iz] = (state.u[3:ny, ix, iz] - state.u[1:ny-2, ix, iz]) ./ (2 * domain.dy_F[2:ny-1])
+            R_U[2:ny-1, ix, iz] =
+                (state.u[3:ny, ix, iz] - state.u[1:ny-2, ix, iz]) ./
+                (2 * domain.dy_F[2:ny-1])
 
-            R_V[2:ny-1, ix, iz] = 1.0im * ns.tf.freq_kx[ix] * (0.5 * (state.v_F[3:ny_F-1, ix, iz] + state.v_F[2:ny_F-2, ix, iz]))
+            R_V[2:ny-1, ix, iz] =
+                1.0im *
+                ns.tf.freq_kx[ix] *
+                (0.5 * (state.v_F[3:ny_F-1, ix, iz] + state.v_F[2:ny_F-2, ix, iz]))
 
         end
     end
@@ -595,9 +698,14 @@ function pressure_poisson_solve(ns::NavierStokesPropagator)
     for iz = 1:domain.nz
         for ix = 1:domain.nx
 
-            R_W[2:ny-1, ix, iz] = (state.w[3:ny, ix, iz] - state.w[1:ny-2, ix, iz]) ./ (2 * domain.dy_F[2:ny-1])
+            R_W[2:ny-1, ix, iz] =
+                (state.w[3:ny, ix, iz] - state.w[1:ny-2, ix, iz]) ./
+                (2 * domain.dy_F[2:ny-1])
 
-            R_V[2:ny-1, ix, iz] = 1.0im * ns.tf.freq_kz[iz] * (0.5 * (state.v_F[3:ny_F-1, ix, iz] + state.v_F[2:ny_F-2, ix, iz]))
+            R_V[2:ny-1, ix, iz] =
+                1.0im *
+                ns.tf.freq_kz[iz] *
+                (0.5 * (state.v_F[3:ny_F-1, ix, iz] + state.v_F[2:ny_F-2, ix, iz]))
 
         end
     end

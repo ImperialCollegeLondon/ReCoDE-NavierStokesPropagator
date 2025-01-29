@@ -68,7 +68,14 @@ mutable struct TimeStepper{T<:AbstractFloat}
     beta::Vector{T}
     zeta::Vector{T}
 
-    function TimeStepper{T}(dt::T, bool_adaptive::Bool, dt_max::T, dt_min::T, nt_max::Int64, cfl::T) where {T<:AbstractFloat}
+    function TimeStepper{T}(
+        dt::T,
+        bool_adaptive::Bool,
+        dt_max::T,
+        dt_min::T,
+        nt_max::Int64,
+        cfl::T,
+    ) where {T<:AbstractFloat}
 
         h_bar::Vector{T} = [8.0 / 15.0; 2.0 / 15.0; 5.0 / 15.0]
         beta::Vector{T} = [1.0; 25.0 / 8.0; 9.0 / 4.0]
@@ -96,8 +103,15 @@ struct NavierStokesPropagator
     # FloatType
     FloatType::Type
 
-    function NavierStokesPropagator(t_stepper::TimeStepper, domain::DomainDescriptor, state::State, sim_cond::SimulationCondition,
-        io_m::InputOutputManager, tf::Transformer, FloatType::Type)
+    function NavierStokesPropagator(
+        t_stepper::TimeStepper,
+        domain::DomainDescriptor,
+        state::State,
+        sim_cond::SimulationCondition,
+        io_m::InputOutputManager,
+        tf::Transformer,
+        FloatType::Type,
+    )
 
         solver::LinearSolver{FloatType} = LinearSolver{FloatType}(domain.ny, domain.ny_F)
 
@@ -131,8 +145,10 @@ function update_flow_attribute!(ns::NavierStokesPropagator)
     # Bulk Velocity and Shear Velocity
     state.u_bulk = integral_y(state.u[:, 1, 1], domain.dy) / (domain.y[end] - domain.y[1])
 
-    tau_lwr::Float64 = sim_cond.nu * (real(state.u[2, 1, 1] - state.u[1, 1, 1])) / domain.dy[1]
-    tau_upr::Float64 = -sim_cond.nu * (real(state.u[end, 1, 1] - state.u[end-1, 1, 1])) / domain.dy[end]
+    tau_lwr::Float64 =
+        sim_cond.nu * (real(state.u[2, 1, 1] - state.u[1, 1, 1])) / domain.dy[1]
+    tau_upr::Float64 =
+        -sim_cond.nu * (real(state.u[end, 1, 1] - state.u[end-1, 1, 1])) / domain.dy[end]
 
     # Friction Velocity
     state.u_tau_lwr = sqrt(abs(tau_lwr))
@@ -189,24 +205,42 @@ function update_flow_statistics!(ns::NavierStokesPropagator)
     for iz in eachindex(domain.z)
         for ix in eachindex(domain.x)
 
-            uu_bar[:] += (state.u[:, ix, iz] .- state.u_bar[:]) .* (state.u[:, ix, iz] .- state.u_bar[:])
-            vv_bar[:] += (state.v[:, ix, iz] .- state.v_bar[:]) .* (state.v[:, ix, iz] .- state.v_bar[:])
-            ww_bar[:] += (state.w[:, ix, iz] .- state.w_bar[:]) .* (state.w[:, ix, iz] .- state.w_bar[:])
+            uu_bar[:] +=
+                (state.u[:, ix, iz] .- state.u_bar[:]) .*
+                (state.u[:, ix, iz] .- state.u_bar[:])
+            vv_bar[:] +=
+                (state.v[:, ix, iz] .- state.v_bar[:]) .*
+                (state.v[:, ix, iz] .- state.v_bar[:])
+            ww_bar[:] +=
+                (state.w[:, ix, iz] .- state.w_bar[:]) .*
+                (state.w[:, ix, iz] .- state.w_bar[:])
 
-            uv_bar[:] += (state.u[:, ix, iz] .- state.u_bar[:]) .* (state.v[:, ix, iz] .- state.v_bar[:])
-            uw_bar[:] += (state.u[:, ix, iz] .- state.u_bar[:]) .* (state.w[:, ix, iz] .- state.w_bar[:])
-            vw_bar[:] += (state.v[:, ix, iz] .- state.v_bar[:]) .* (state.w[:, ix, iz] .- state.w_bar[:])
+            uv_bar[:] +=
+                (state.u[:, ix, iz] .- state.u_bar[:]) .*
+                (state.v[:, ix, iz] .- state.v_bar[:])
+            uw_bar[:] +=
+                (state.u[:, ix, iz] .- state.u_bar[:]) .*
+                (state.w[:, ix, iz] .- state.w_bar[:])
+            vw_bar[:] +=
+                (state.v[:, ix, iz] .- state.v_bar[:]) .*
+                (state.w[:, ix, iz] .- state.w_bar[:])
 
         end
     end
 
-    state.uu_bar[:] += (uu_bar[:] / (domain.nx * domain.nz) - state.uu_bar[:]) / state.n_sample
-    state.vv_bar[:] += (vv_bar[:] / (domain.nx * domain.nz) - state.vv_bar[:]) / state.n_sample
-    state.ww_bar[:] += (ww_bar[:] / (domain.nx * domain.nz) - state.ww_bar[:]) / state.n_sample
+    state.uu_bar[:] +=
+        (uu_bar[:] / (domain.nx * domain.nz) - state.uu_bar[:]) / state.n_sample
+    state.vv_bar[:] +=
+        (vv_bar[:] / (domain.nx * domain.nz) - state.vv_bar[:]) / state.n_sample
+    state.ww_bar[:] +=
+        (ww_bar[:] / (domain.nx * domain.nz) - state.ww_bar[:]) / state.n_sample
 
-    state.uv_bar[:] += (uv_bar[:] / (domain.nx * domain.nz) - state.uv_bar[:]) / state.n_sample
-    state.uw_bar[:] += (uw_bar[:] / (domain.nx * domain.nz) - state.uw_bar[:]) / state.n_sample
-    state.vw_bar[:] += (vw_bar[:] / (domain.nx * domain.nz) - state.vw_bar[:]) / state.n_sample
+    state.uv_bar[:] +=
+        (uv_bar[:] / (domain.nx * domain.nz) - state.uv_bar[:]) / state.n_sample
+    state.uw_bar[:] +=
+        (uw_bar[:] / (domain.nx * domain.nz) - state.uw_bar[:]) / state.n_sample
+    state.vw_bar[:] +=
+        (vw_bar[:] / (domain.nx * domain.nz) - state.vw_bar[:]) / state.n_sample
 
 
     # Transformation Operation
@@ -292,7 +326,12 @@ end
 Initial Conditions
 =#
 
-function init_flowfield!(sim_cond::SimulationCondition{T}, domain::DomainDescriptor{T}, state::State{T}, tf::Transformer{T}) where {T<:AbstractFloat}
+function init_flowfield!(
+    sim_cond::SimulationCondition{T},
+    domain::DomainDescriptor{T},
+    state::State{T},
+    tf::Transformer{T},
+) where {T<:AbstractFloat}
 
     # Apply Perturbation
     apply_perturbation!(sim_cond, domain, state, tf)
@@ -303,13 +342,17 @@ function init_flowfield!(sim_cond::SimulationCondition{T}, domain::DomainDescrip
         if (sim_cond.force_constraint == 'm')
 
             for iy = 1:domain.ny
-                state.u[iy, 1, 1] += (1.0 - domain.y[iy]^2) * sim_cond.force_magnitude / (2.0 / 3.0)
+                state.u[iy, 1, 1] +=
+                    (1.0 - domain.y[iy]^2) * sim_cond.force_magnitude / (2.0 / 3.0)
             end
 
         elseif (sim_cond.force_constraint == 'p')
 
             for iy = 1:domain.ny
-                state.u[iy, 1, 1] += (1.0 / sim_cond.nu) * (1.0 - domain.y[iy]^2) * (-0.5 * sim_cond.force_magnitude)
+                state.u[iy, 1, 1] +=
+                    (1.0 / sim_cond.nu) *
+                    (1.0 - domain.y[iy]^2) *
+                    (-0.5 * sim_cond.force_magnitude)
             end
 
         end
@@ -327,28 +370,33 @@ function init_flowfield!(sim_cond::SimulationCondition{T}, domain::DomainDescrip
 
     # Enforce Boundary Condition
     state.u[1, :, :] .= 0.0
-    state.u[1, 1, 1] = sim_cond.bound_cond[(vel='u', wall='l')]
+    state.u[1, 1, 1] = sim_cond.bound_cond[(vel = 'u', wall = 'l')]
 
     state.u[end, :, :] .= 0.0
-    state.u[end, 1, 1] = sim_cond.bound_cond[(vel='u', wall='u')]
+    state.u[end, 1, 1] = sim_cond.bound_cond[(vel = 'u', wall = 'u')]
 
     state.v[1, :, :] .= 0.0
-    state.v[1, 1, 1] = sim_cond.bound_cond[(vel='v', wall='l')]
+    state.v[1, 1, 1] = sim_cond.bound_cond[(vel = 'v', wall = 'l')]
 
     state.v[end, :, :] .= 0.0
-    state.v[end, 1, 1] = sim_cond.bound_cond[(vel='v', wall='u')]
+    state.v[end, 1, 1] = sim_cond.bound_cond[(vel = 'v', wall = 'u')]
 
     state.w[1, :, :] .= 0.0
-    state.w[1, 1, 1] = sim_cond.bound_cond[(vel='w', wall='l')]
+    state.w[1, 1, 1] = sim_cond.bound_cond[(vel = 'w', wall = 'l')]
 
     state.w[end, :, :] .= 0.0
-    state.w[end, 1, 1] = sim_cond.bound_cond[(vel='w', wall='u')]
+    state.w[end, 1, 1] = sim_cond.bound_cond[(vel = 'w', wall = 'u')]
 
     return nothing
 
 end
 
-function apply_perturbation!(sim_cond::SimulationCondition{T}, domain::DomainDescriptor{T}, state::State{T}, tf::Transformer{T}) where {T<:AbstractFloat}
+function apply_perturbation!(
+    sim_cond::SimulationCondition{T},
+    domain::DomainDescriptor{T},
+    state::State{T},
+    tf::Transformer{T},
+) where {T<:AbstractFloat}
 
     rng = Xoshiro(Int64(floor(time())))
 
@@ -404,7 +452,10 @@ function apply_perturbation!(sim_cond::SimulationCondition{T}, domain::DomainDes
 
 end
 
-function integral_y(arr::Vector{Complex{T}}, dy::Vector{T})::Complex{T} where {T<:AbstractFloat}
+function integral_y(
+    arr::Vector{Complex{T}},
+    dy::Vector{T},
+)::Complex{T} where {T<:AbstractFloat}
 
     # Integral
     integral::Complex{T} = 0.0
