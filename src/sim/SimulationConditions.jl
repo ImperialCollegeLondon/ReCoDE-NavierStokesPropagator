@@ -42,7 +42,11 @@ function check_option_validity(init_cond::Char, force_type::Char)
 
     # Error Handling
     if (bool_init && bool_force)
-        throw(ArgumentError("init_cond argument ($(init_cond)) and force_type argument ($(force_type)) not in admissible option."))
+        throw(
+            ArgumentError(
+                "init_cond argument ($(init_cond)) and force_type argument ($(force_type)) not in admissible option.",
+            ),
+        )
     end
 
     if (bool_init)
@@ -50,7 +54,9 @@ function check_option_validity(init_cond::Char, force_type::Char)
     end
 
     if (bool_force)
-        throw(ArgumentError("force_type argument ($(force_type)) not in admissible option."))
+        throw(
+            ArgumentError("force_type argument ($(force_type)) not in admissible option."),
+        )
     end
 
     return nothing
@@ -94,8 +100,14 @@ struct SimulationCondition{T<:AbstractFloat}
     # Viscosity
     nu::T
 
-    function SimulationCondition{T}(init_cond::Char, init_kick::T, force_type::Char, force_magnitude::T,
-        bound_cond::Dict{BoundTuple,T}, nu::T) where {T<:AbstractFloat}
+    function SimulationCondition{T}(
+        init_cond::Char,
+        init_kick::T,
+        force_type::Char,
+        force_magnitude::T,
+        bound_cond::Dict{BoundTuple,T},
+        nu::T,
+    ) where {T<:AbstractFloat}
 
         @info("--- Initialising SimulationCondition ---")
 
@@ -124,7 +136,11 @@ function planeCouetteFlow(init_cond::Char, init_kick::T) where {T<:AbstractFloat
 
     # Initial Condition
     if (init_cond == 'p')
-        throw(ArgumentError("PlaneCouetteFlow flow configuration not compatible with init_cond argument."))
+        throw(
+            ArgumentError(
+                "PlaneCouetteFlow flow configuration not compatible with init_cond argument.",
+            ),
+        )
     end
 
     init_kick::T = init_kick
@@ -137,18 +153,24 @@ function planeCouetteFlow(init_cond::Char, init_kick::T) where {T<:AbstractFloat
     bound_cond::Dict{BoundTuple,T} = Dict()
 
     # u
-    bound_cond[(vel='u', wall='l')] = -1.0
-    bound_cond[(vel='u', wall='u')] = 1.0
+    bound_cond[(vel = 'u', wall = 'l')] = -1.0
+    bound_cond[(vel = 'u', wall = 'u')] = 1.0
 
     # v
-    bound_cond[(vel='v', wall='l')] = 0.0
-    bound_cond[(vel='v', wall='u')] = 0.0
+    bound_cond[(vel = 'v', wall = 'l')] = 0.0
+    bound_cond[(vel = 'v', wall = 'u')] = 0.0
 
     # w
-    bound_cond[(vel='w', wall='l')] = 0.0
-    bound_cond[(vel='w', wall='u')] = 0.0
+    bound_cond[(vel = 'w', wall = 'l')] = 0.0
+    bound_cond[(vel = 'w', wall = 'u')] = 0.0
 
-    return SimulationCondition{T}(init_cond, init_kick, force_type, force_magnitude, bound_cond)
+    return SimulationCondition{T}(
+        init_cond,
+        init_kick,
+        force_type,
+        force_magnitude,
+        bound_cond,
+    )
 
 end
 
@@ -157,14 +179,23 @@ $(SIGNATURES)
 
 Initalises the Plane Poiseuille Flow configuration for simulation.
 """
-function planePoiseuilleFlow(init_cond::Char, init_kick::T, force_type::Char, force_magnitude::T) where {T<:AbstractFloat}
+function planePoiseuilleFlow(
+    init_cond::Char,
+    init_kick::T,
+    force_type::Char,
+    force_magnitude::T,
+) where {T<:AbstractFloat}
 
     # Validity Check
     check_option_validity(init_cond::Char, force_type::Char)
 
     # Initial Condition
     if (init_cond == 'c')
-        throw(ArgumentError("PlanePoiseuilleFlow flow configuration not compatible with init_cond argument."))
+        throw(
+            ArgumentError(
+                "PlanePoiseuilleFlow flow configuration not compatible with init_cond argument.",
+            ),
+        )
     end
 
     init_kick::T = init_kick
@@ -173,18 +204,24 @@ function planePoiseuilleFlow(init_cond::Char, init_kick::T, force_type::Char, fo
     bound_cond::Dict{BoundTuple,T} = Dict()
 
     # u
-    bound_cond[(vel='u', wall='l')] = 0.0
-    bound_cond[(vel='u', wall='u')] = 0.0
+    bound_cond[(vel = 'u', wall = 'l')] = 0.0
+    bound_cond[(vel = 'u', wall = 'u')] = 0.0
 
     # v
-    bound_cond[(vel='v', wall='l')] = 0.0
-    bound_cond[(vel='v', wall='u')] = 0.0
+    bound_cond[(vel = 'v', wall = 'l')] = 0.0
+    bound_cond[(vel = 'v', wall = 'u')] = 0.0
 
     # w
-    bound_cond[(vel='w', wall='l')] = 0.0
-    bound_cond[(vel='w', wall='u')] = 0.0
+    bound_cond[(vel = 'w', wall = 'l')] = 0.0
+    bound_cond[(vel = 'w', wall = 'u')] = 0.0
 
-    return SimulationCondition{T}(init_cond, init_kick, force_type, force_magnitude, bound_cond)
+    return SimulationCondition{T}(
+        init_cond,
+        init_kick,
+        force_type,
+        force_magnitude,
+        bound_cond,
+    )
 
 end
 

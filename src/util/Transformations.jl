@@ -58,9 +58,9 @@ struct Transformer{T<:AbstractFloat}
         dir_wisdom::String,
         state::State{T},
         domain::DomainDescriptor;
-        wisdom_flag::String="measure",
-        reset_wisdom::Bool=false,
-        test_mode::Bool=false,
+        wisdom_flag::String = "measure",
+        reset_wisdom::Bool = false,
+        test_mode::Bool = false,
     ) where {T<:AbstractFloat}
         @info("--- Initialising Transformer ---")
 
@@ -80,11 +80,11 @@ struct Transformer{T<:AbstractFloat}
 
         # Planning
         @time begin
-            fft_plan = plan_fft!(state.u, (2, 3); flags=wisdom_dict[wisdom_flag])
-            ifft_plan = plan_bfft!(state.u, (2, 3); flags=wisdom_dict[wisdom_flag])
+            fft_plan = plan_fft!(state.u, (2, 3); flags = wisdom_dict[wisdom_flag])
+            ifft_plan = plan_bfft!(state.u, (2, 3); flags = wisdom_dict[wisdom_flag])
 
-            fft_plan_F = plan_fft!(state.v_F, (2, 3); flags=wisdom_dict[wisdom_flag])
-            ifft_plan_F = plan_bfft!(state.v_F, (2, 3); flags=wisdom_dict[wisdom_flag])
+            fft_plan_F = plan_fft!(state.v_F, (2, 3); flags = wisdom_dict[wisdom_flag])
+            ifft_plan_F = plan_bfft!(state.v_F, (2, 3); flags = wisdom_dict[wisdom_flag])
         end
 
         if (!test_mode)
@@ -168,7 +168,7 @@ function physical2fourier!(
     tf::Transformer{T},
     arr::Array{Complex{T},3},
     frac_mode::Bool,
-    dealias_mode::Bool
+    dealias_mode::Bool,
 ) where {T<:AbstractFloat}
 
     # FFT
