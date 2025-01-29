@@ -13,12 +13,12 @@ using Documenter
 Make Documenter
 =#
 
-makedocs(sitename = "Navier-Stokes Propagator", pages = [
+makedocs(sitename="Navier-Stokes Propagator", pages=[
     "Home" => "index.md",
-    #"Simulation Constructs" => Any["sim/States.md",],
-    #"Simulation Utilities" => Any["util/LinearSolvers.md", "util/Transformations.md"],
+    "Simulation Constructs" => Any["sim/DomainDescriptors.md", "sim/States.md", "sim/SimulationConditions.md"],
+    "Simulation Utilities" => Any["util/Transformations.md", "util/LinearSolvers.md"],
 ])
 
 deploydocs(
-    repo = "github.com/ImperialCollegeLondon/ReCoDE-NavierStokesPropagator.git",
+    repo="github.com/ImperialCollegeLondon/ReCoDE-NavierStokesPropagator.git",
 )
