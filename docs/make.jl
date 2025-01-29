@@ -14,13 +14,13 @@ Make Documenter
 =#
 
 makedocs(
-    sitename = "Navier-Stokes Propagator",
-    pages = [
+    sitename="Navier-Stokes Propagator",
+    pages=[
         "Home" => "index.md",
         "Simulation Constructs" =>
             Any["sim/DomainDescriptors.md", "sim/States.md", "sim/SimulationConditions.md"],
-        "Simulation Utilities" => Any["util/Transformations.md", "util/LinearSolvers.md"],
+        "Simulation Utilities" => Any["util/Transformations.md", "util/LinearSolvers.md", "util/InputOutputManagers.md"],
     ],
 )
 
-deploydocs(repo = "github.com/ImperialCollegeLondon/ReCoDE-NavierStokesPropagator.git")
+deploydocs(repo="github.com/ImperialCollegeLondon/ReCoDE-NavierStokesPropagator.git")

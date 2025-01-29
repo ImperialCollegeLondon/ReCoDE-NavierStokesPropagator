@@ -36,6 +36,11 @@ export physical2fourier!, fourier2physical!
 export TriDiagonalMatrix, LinearSolver
 export solve_system_R!, solve_system_C!
 
+export InputOutputManager
+export write_grid
+export write_flowfield, read_flowfield!
+export write_flow_statistics, write_attribute
+
 export NavierStokesPropagator, TimeStepper
 export DomainDescriptor, SimulationCondition, State
 export InputOutputManager, Transformer
