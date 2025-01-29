@@ -40,15 +40,21 @@ struct InputOutputManager
     freq_stats::Int64
     min_step_stats::Int64
 
-    function InputOutputManager(input_root::String, output_root::String, freq_state::Int64, freq_stats::Int64, min_step_stats::Int64)
+    function InputOutputManager(
+        input_root::String,
+        output_root::String,
+        freq_state::Int64,
+        freq_stats::Int64,
+        min_step_stats::Int64,
+    )
 
         @info("--- Initialising InputOutputManager ---")
 
         # Reset Output Directory
         if isdir(output_root)
 
-            chmod(output_root, 0o777; recursive=true)
-            rm(output_root; recursive=true)
+            chmod(output_root, 0o777; recursive = true)
+            rm(output_root; recursive = true)
 
         end
 
@@ -77,7 +83,10 @@ $(SIGNATURES)
 
 Write the wall-normal grid points to file.
 """
-function write_grid(io_m::InputOutputManager, domain::DomainDescriptor{T}) where {T<:AbstractFloat}
+function write_grid(
+    io_m::InputOutputManager,
+    domain::DomainDescriptor{T},
+) where {T<:AbstractFloat}
 
     @info("Writing domain grid to output directory.")
 
@@ -96,26 +105,18 @@ function write_grid(io_m::InputOutputManager, domain::DomainDescriptor{T}) where
         attrs(g)["mesh_size"] = [nx; ny; nz] # Mesh Size
 
         # Y-Domain
-        dset::HDF5.Dataset = create_dataset(g, "y",
-            datatype(T),
-            dataspace((ny,));
-            chunk=((ny,)))
+        dset::HDF5.Dataset =
+            create_dataset(g, "y", datatype(T), dataspace((ny,)); chunk = ((ny,)))
 
         write(dset, domain.y)
 
         # X-Domain
-        dset = create_dataset(g, "x",
-            datatype(T),
-            dataspace((nx,));
-            chunk=((nx,)))
+        dset = create_dataset(g, "x", datatype(T), dataspace((nx,)); chunk = ((nx,)))
 
         write(dset, domain.x)
 
         # Z-Domain
-        dset = create_dataset(g, "z",
-            datatype(T),
-            dataspace((nz,));
-            chunk=((nz,)))
+        dset = create_dataset(g, "z", datatype(T), dataspace((nz,)); chunk = ((nz,)))
 
         write(dset, domain.z)
 
@@ -133,14 +134,18 @@ $(SIGNATURES)
 
 Rearranges the flowfield state to (x,y,z) from (y,x,z) and writes to file.
 """
-function write_flowfield(io_m::InputOutputManager, state::State, domain::DomainDescriptor{T}) where {T<:AbstractFloat}
+function write_flowfield(
+    io_m::InputOutputManager,
+    state::State,
+    domain::DomainDescriptor{T},
+) where {T<:AbstractFloat}
 
     @info("Writing state t = $(state.t_sim), nt = $(state.nt) to output directory.")
 
     # Format Output Path
     output_path::String = string(io_m.output_root, "/flowfield/state_nt")
 
-    numeric_vec::Vector{Int64} = digits(state.nt, base=10, pad=8)
+    numeric_vec::Vector{Int64} = digits(state.nt, base = 10, pad = 8)
 
     for i = 8:-1:1
         output_path = string(output_path, "$(numeric_vec[i])")
@@ -164,37 +169,49 @@ function write_flowfield(io_m::InputOutputManager, state::State, domain::DomainD
         pl_arr::Array{T,3} = Array{T,3}(undef, (nx, ny, nz))
 
         # U Velocity
-        dset::HDF5.Dataset = create_dataset(g, "u",
+        dset::HDF5.Dataset = create_dataset(
+            g,
+            "u",
             datatype(T),
             dataspace((nx, ny, nz));
-            chunk=((nx, 1, nz)))
+            chunk = ((nx, 1, nz)),
+        )
 
         pl_arr[:] = permutedims(real(state.u), (2, 1, 3))
         write(dset, pl_arr)
 
         # V Velocity
-        dset = create_dataset(g, "v",
+        dset = create_dataset(
+            g,
+            "v",
             datatype(T),
             dataspace((nx, ny, nz));
-            chunk=((nx, 1, nz)))
+            chunk = ((nx, 1, nz)),
+        )
 
         pl_arr[:] = permutedims(real(state.v), (2, 1, 3))
         write(dset, pl_arr)
 
         # W Velocity
-        dset = create_dataset(g, "w",
+        dset = create_dataset(
+            g,
+            "w",
             datatype(T),
             dataspace((nx, ny, nz));
-            chunk=((nx, 1, nz)))
+            chunk = ((nx, 1, nz)),
+        )
 
         pl_arr[:] = permutedims(real(state.w), (2, 1, 3))
         write(dset, pl_arr)
 
         # P Velocity
-        dset = create_dataset(g, "p",
+        dset = create_dataset(
+            g,
+            "p",
             datatype(T),
             dataspace((nx, ny, nz));
-            chunk=((nx, 1, nz)))
+            chunk = ((nx, 1, nz)),
+        )
 
         pl_arr[:] = permutedims(real(state.p), (2, 1, 3))
         write(dset, pl_arr)
@@ -213,14 +230,18 @@ $(SIGNATURES)
 
 Rearranges the statistical state to (x,y,z) from (y,x,z) and writes to file.
 """
-function write_flow_statistics(io_m::InputOutputManager, state::State, domain::DomainDescriptor{T}) where {T<:AbstractFloat}
+function write_flow_statistics(
+    io_m::InputOutputManager,
+    state::State,
+    domain::DomainDescriptor{T},
+) where {T<:AbstractFloat}
 
     @info("Writing statistics t = $(state.t_sim), nt = $(state.nt) to output directory.")
 
     # Format Output Path
     output_path::String = string(io_m.output_root, "/statistics/statistics_nt")
 
-    numeric_vec::Vector{Int64} = digits(state.nt, base=10, pad=8)
+    numeric_vec::Vector{Int64} = digits(state.nt, base = 10, pad = 8)
 
     for i = 8:-1:1
         output_path = string(output_path, "$(numeric_vec[i])")
@@ -245,91 +266,62 @@ function write_flow_statistics(io_m::InputOutputManager, state::State, domain::D
         pl_arr::Vector{T} = Vector{T}(undef, ny)
 
         # Y-Domain
-        dset::HDF5.Dataset = create_dataset(g, "y",
-            datatype(T),
-            dataspace((ny,));
-            chunk=((ny,)))
+        dset::HDF5.Dataset =
+            create_dataset(g, "y", datatype(T), dataspace((ny,)); chunk = ((ny,)))
 
         pl_arr[:] = real(domain.y)
         write(dset, pl_arr)
 
         # U Velocity
-        dset = create_dataset(g, "u_bar",
-            datatype(T),
-            dataspace((ny,));
-            chunk=((ny,)))
+        dset = create_dataset(g, "u_bar", datatype(T), dataspace((ny,)); chunk = ((ny,)))
 
         pl_arr[:] = real(state.u_bar)
         write(dset, pl_arr)
 
         # V Velocity
-        dset = create_dataset(g, "v_bar",
-            datatype(T),
-            dataspace((ny,));
-            chunk=((ny,)))
+        dset = create_dataset(g, "v_bar", datatype(T), dataspace((ny,)); chunk = ((ny,)))
 
         pl_arr[:] = real(state.v_bar)
         write(dset, pl_arr)
 
         # W Velocity
-        dset = create_dataset(g, "w_bar",
-            datatype(T),
-            dataspace((ny,));
-            chunk=((ny,)))
+        dset = create_dataset(g, "w_bar", datatype(T), dataspace((ny,)); chunk = ((ny,)))
 
         pl_arr[:] = real(state.w_bar)
         write(dset, pl_arr)
 
         # UU Velocity
-        dset = create_dataset(g, "uu_bar",
-            datatype(T),
-            dataspace((ny,));
-            chunk=((ny,)))
+        dset = create_dataset(g, "uu_bar", datatype(T), dataspace((ny,)); chunk = ((ny,)))
 
         pl_arr[:] = real(state.uu_bar)
         write(dset, pl_arr)
 
         # UV Velocity
-        dset = create_dataset(g, "uv_bar",
-            datatype(T),
-            dataspace((ny,));
-            chunk=((ny,)))
+        dset = create_dataset(g, "uv_bar", datatype(T), dataspace((ny,)); chunk = ((ny,)))
 
         pl_arr[:] = real(state.uv_bar)
         write(dset, pl_arr)
 
         # UW Velocity
-        dset = create_dataset(g, "uw_bar",
-            datatype(T),
-            dataspace((ny,));
-            chunk=((ny,)))
+        dset = create_dataset(g, "uw_bar", datatype(T), dataspace((ny,)); chunk = ((ny,)))
 
         pl_arr[:] = real(state.uw_bar)
         write(dset, pl_arr)
 
         # VV Velocity
-        dset = create_dataset(g, "vv_bar",
-            datatype(T),
-            dataspace((ny,));
-            chunk=((ny,)))
+        dset = create_dataset(g, "vv_bar", datatype(T), dataspace((ny,)); chunk = ((ny,)))
 
         pl_arr[:] = real(state.vv_bar)
         write(dset, pl_arr)
 
         # VW Velocity
-        dset = create_dataset(g, "vw_bar",
-            datatype(T),
-            dataspace((ny,));
-            chunk=((ny,)))
+        dset = create_dataset(g, "vw_bar", datatype(T), dataspace((ny,)); chunk = ((ny,)))
 
         pl_arr[:] = real(state.vw_bar)
         write(dset, pl_arr)
 
         # WW Velocity
-        dset = create_dataset(g, "ww_bar",
-            datatype(T),
-            dataspace((ny,));
-            chunk=((ny,)))
+        dset = create_dataset(g, "ww_bar", datatype(T), dataspace((ny,)); chunk = ((ny,)))
 
         pl_arr[:] = real(state.ww_bar)
         write(dset, pl_arr)
@@ -348,7 +340,12 @@ $(SIGNATURES)
 
 Write the simulation attribute on the fly to a logger.
 """
-function write_attribute(io_m::InputOutputManager, state::State{T}, dt::T, nu::T) where {T<:AbstractFloat}
+function write_attribute(
+    io_m::InputOutputManager,
+    state::State{T},
+    dt::T,
+    nu::T,
+) where {T<:AbstractFloat}
 
     # Output Path
     output_path::String = string(io_m.output_root, "/flowfield/attribute.h5")
@@ -427,7 +424,11 @@ function read_flowfield!(io_m::InputOutputManager, state::State)
         # Compatiblity Check
         if ((nx != nx_arr) | (nz != nz_arr) | (ny != ny_arr))
 
-            throw(DimensionMismatch("Mismatching mesh size of start.h5 ($(input_path)) with simulation mesh."))
+            throw(
+                DimensionMismatch(
+                    "Mismatching mesh size of start.h5 ($(input_path)) with simulation mesh.",
+                ),
+            )
 
         end
 
