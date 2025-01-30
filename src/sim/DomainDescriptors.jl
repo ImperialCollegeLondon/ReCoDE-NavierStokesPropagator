@@ -16,6 +16,10 @@ export DomainDescriptor
 Domain Descriptor
 =#
 
+"""
+DomainDescriptor contains all required information that describes 
+    the dimension of the simulation domain and its mesh properties.
+"""
 struct DomainDescriptor{T<:AbstractFloat}
 
     # Mesh Size

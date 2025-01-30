@@ -4,8 +4,8 @@
 Package
 =#
 
-include("../src/NavierStokesPropagator.jl")
-using .NavierStokesPropagator
+include("../src/NavierStokesPropagators.jl")
+using .NavierStokesPropagators
 
 using Documenter
 
@@ -13,12 +13,18 @@ using Documenter
 Make Documenter
 =#
 
-makedocs(sitename = "Navier-Stokes Propagator", pages = [
-    "Home" => "index.md",
-    #"Simulation Constructs" => Any["sim/States.md",],
-    #"Simulation Utilities" => Any["util/LinearSolvers.md", "util/Transformations.md"],
-])
-
-deploydocs(
-    repo = "github.com/ImperialCollegeLondon/ReCoDE-NavierStokesPropagator.git",
+makedocs(
+    sitename = "Navier-Stokes Propagator",
+    pages = [
+        "Home" => "index.md",
+        "Simulation Constructs" =>
+            Any["sim/DomainDescriptors.md", "sim/States.md", "sim/SimulationConditions.md"],
+        "Simulation Utilities" => Any[
+            "util/Transformations.md",
+            "util/LinearSolvers.md",
+            "util/InputOutputManagers.md",
+        ],
+    ],
 )
+
+deploydocs(repo = "github.com/ImperialCollegeLondon/ReCoDE-NavierStokesPropagator.git")

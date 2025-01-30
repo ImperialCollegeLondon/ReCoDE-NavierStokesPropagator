@@ -7,6 +7,7 @@ Package
 =#
 
 using FFTW
+using DocStringExtensions
 
 using ..States: State
 using ..DomainDescriptors: DomainDescriptor
@@ -31,6 +32,10 @@ wisdom_dict["measure"] = FFTW.MEASURE
 wisdom_dict["patient"] = FFTW.PATIENT
 wisdom_dict["exhaustive"] = FFTW.EXHAUSTIVE
 
+"""
+The Transformer is an encapsulation of the data required for discrete Fourier transform via the 
+    FFTW package, containing the FFT plan and the required data for dealiasing.
+"""
 struct Transformer{T<:AbstractFloat}
 
     # FFTW Plan (Base Grid)
@@ -118,6 +123,7 @@ FFT Transformation
 =#
 
 """
+$(SIGNATURES)
 Converts the physical representation of State arrays to frequency domain via FFT.
 """
 function physical2fourier!(tf::Transformer{T}, state::State{T}) where {T<:AbstractFloat}
@@ -155,6 +161,7 @@ function physical2fourier!(tf::Transformer{T}, state::State{T}) where {T<:Abstra
 end
 
 """
+$(SIGNATURES)
 Converts the physical representation of State arrays to frequency domain via FFT for a specfic array.
 """
 function physical2fourier!(
@@ -196,6 +203,7 @@ function physical2fourier!(
 end
 
 """
+$(SIGNATURES)
 Converts the frequency domain representation of State arrays to physical domain via iFFT.
 """
 function fourier2physical!(tf::Transformer{T}, state::State{T}) where {T<:AbstractFloat}
@@ -230,6 +238,7 @@ function fourier2physical!(tf::Transformer{T}, state::State{T}) where {T<:Abstra
 end
 
 """
+$(SIGNATURES)
 Converts the frequency domain representation of State arrays to physical domain via iFFT for a specfic array.
 """
 function fourier2physical!(
@@ -256,6 +265,7 @@ Grid Transformation
 =#
 
 """
+$(SIGNATURES)
 Transforms the grid representation of wall-normal velocity from physical to fractional grid.
 """
 function y2y_F!(state::State{T}) where {T<:AbstractFloat}
@@ -286,9 +296,10 @@ function y2y_F!(state::State{T}) where {T<:AbstractFloat}
 end
 
 """
+$(SIGNATURES)
 Transforms the grid representation of wall-normal velocity from fractional to physical grid.
 """
-function y_F2y!(state::State)
+function y_F2y!(state::State{T}) where {T<:AbstractFloat}
     if (!state.frac_mode)
         @debug("Applying a y_F2y! grid transformation when frac_mode = $(state.frac_mode).")
         return nothing
