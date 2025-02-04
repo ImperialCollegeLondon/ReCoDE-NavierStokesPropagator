@@ -68,7 +68,7 @@ function run_simulation!(ns::NavierStokesPropagator)
     # State Initial Condition I/O
     y_F2y!(ns.state)
     write_flowfield(ns.io_m, ns.state, ns.domain)
-    # y2y_F!(ns.state)
+    y2y_F!(ns.state)
 
     # Transformation Operation
     physical2fourier!(ns.tf, ns.state)
@@ -139,7 +139,7 @@ function run_simulation!(ns::NavierStokesPropagator)
 
             end
 
-            # y2y_F!(ns.state)
+            y2y_F!(ns.state)
 
         end
 
