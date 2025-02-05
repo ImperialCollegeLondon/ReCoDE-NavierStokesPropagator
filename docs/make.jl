@@ -16,9 +16,16 @@ Make Documenter
 makedocs(
     sitename = "Navier-Stokes Propagator",
     pages = [
-        "Home" => "index.md",
-        "Simulation Constructs" =>
-            Any["sim/DomainDescriptors.md", "sim/States.md", "sim/SimulationConditions.md"],
+        "Home" => Any[
+            "index.md",
+            "getting_started.md",
+            "best_practices.md"
+        ],
+        "Simulation Constructs" => Any[
+            "sim/DomainDescriptors.md",
+            "sim/States.md",
+            "sim/SimulationConditions.md"
+        ],
         "Simulation Utilities" => Any[
             "util/Transformations.md",
             "util/LinearSolvers.md",
