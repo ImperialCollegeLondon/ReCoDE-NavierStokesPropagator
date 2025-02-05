@@ -2,7 +2,7 @@
 
 julia_version = "1.11.3"
 manifest_format = "2.0"
-project_hash = "44d17de5fd375a34867764a60952b2544ab43a0a"
+project_hash = "09ab5b52ac19c9dd7c19780a6386727cddb426ba"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -313,7 +313,7 @@ uuid = "14a3606d-f60d-562e-9121-12d972cd8159"
 version = "2023.12.12"
 
 [[deps.NavierStokesPropagators]]
-deps = ["FFTW", "HDF5", "JuliaFormatter", "Test"]
+deps = ["DocStringExtensions", "FFTW", "HDF5", "JuliaFormatter", "Test"]
 path = ".."
 uuid = "0053f5ce-4848-4e9f-8975-9c31ffb271f1"
 version = "0.1.0"
