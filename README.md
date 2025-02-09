@@ -24,20 +24,6 @@ The algorithm used here is inspired from [Diablo](https://github.com/johnryantay
 - Familiarity with Julia. The Early Career Researcher Institute also provides an [Introduction to Julia](https://www.imperial.ac.uk/students/academic-support/graduate-school/professional-development/doctoral-students/research-computing-data-science/courses/introduction-to-julia/) course.
 
 Note : The theoretical understanding of the finite difference method, Fourier series and the time-stepping scheme are not a major necessity. An understanding of the mathematical structure for algorithimic implementation is sufficient to understand the ideas discussed in this tutorial.
-<!-- List the system requirements and how to obtain them, that can be as simple
-as adding a hyperlink to as detailed as writting step-by-step instructions.
-How detailed the instructions should be will vary on a case-by-case basis.
-
-Here are some examples:
-
-- 50 GB of disk space to hold Dataset X
-- Anaconda
-- Python 3.11 or newer
-- Access to the HPC
-- PETSc v3.16
-- gfortran compiler
-- Paraview
--->
 
 ### System
 
@@ -52,17 +38,6 @@ Here are some examples:
 3. Launch Julia `pkg` mode via pressing `]` in the Julia REPL.
 4. In the `pkg` mode, activate the package environment via `activate .`.
 5. Testing can be done by entering `test` in the REPL's pkg mode.
-<!-- An overview of the files and folder in the exemplar.
-Not all files and directories need to be listed, just the important
-sections of your project, like the learning material, the code, the tests, etc.
-
-A good starting point is using the command `tree` in a terminal(Unix),
-copying its output and then removing the unimportant parts.
-
-You can use ellipsis (...) to suggest that there are more files or folders
-in a tree node.
-
--->
 
 ## Project Structure
 
@@ -84,7 +59,9 @@ in a tree node.
 │   ├── util (mirrors src/util)
 │   ├── StateTransformations.jl
 │   └── runtest.jl
-└── docs
+├── docs
+└── .github
+    └── (.yml files for CI/CD)
 ```
 
 ## License
