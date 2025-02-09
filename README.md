@@ -47,6 +47,8 @@ From the perspective of software, we can break the neatly into two components. T
 
 `Simulation Constructs` acts as the foundation of the codebase, with the two primary Julia-structs, `DomainDescriptors.jl` and `States.jl`, being stand-alone concepts. DomainDescriptors contain all required mesh information and the sizing of the computational box, while States itself encapsulate the velocity fields and the state of simulation that are mutable, and where the progression of the time-stepping scheme is dependent on. In a sense, these constructs are the conceptually the closest to the *physical* problem at hand. Building on top of these two constructs, `SimulationConditions.jl` encapsulates the initialisation of the simulation and the boundary conditions the simulation is required to adhere to. Although `SimulationConditions.jl` depend on `DomainDescriptors.jl` and `States.jl`, the following conceptual division leads to a minimisation of the dependencies required. Looking at the code base, the initialisation of each Julia-struct can be done by referring to other variables/functions within its initialiser.
 
+`Simulation Util` instead, as discussed above, wraps around open-source libraries and algorithmic routines that aids in the simulation of the Navier-Stokes equations. `Simulation Constructs` and `Simulation Util` are divided in a way that source files in `Simulation Util` would only be dependent on `Simulation Constructs` but not vis versa.
+
 ### Project Structure
 ```log
 .
