@@ -70,22 +70,14 @@ mutable struct TimeStepper{T<:AbstractFloat}
     zeta::Vector{T}
 
     function TimeStepper{T}(
-        dt::T,
-        bool_adaptive::Bool,
-        dt_max::T,
-        dt_min::T,
-        nt_max::Int64,
-        cfl::T,
+        dt::T, bool_adaptive::Bool, dt_max::T, dt_min::T, nt_max::Int64, cfl::T
     ) where {T<:AbstractFloat}
-
         h_bar::Vector{T} = [8.0 / 15.0; 2.0 / 15.0; 5.0 / 15.0]
         beta::Vector{T} = [1.0; 25.0 / 8.0; 9.0 / 4.0]
         zeta::Vector{T} = [0.0; -17.0 / 8.0; -5.0 / 4.0]
 
         return new(dt, bool_adaptive, dt_max, dt_min, nt_max, cfl, h_bar, beta, zeta)
-
     end
-
 end
 
 struct NavierStokesPropagator
@@ -113,13 +105,10 @@ struct NavierStokesPropagator
         tf::Transformer,
         FloatType::Type,
     )
-
         solver::LinearSolver{FloatType} = LinearSolver{FloatType}(domain.ny, domain.ny_F)
 
         return new(t_stepper, domain, state, sim_cond, solver, io_m, tf, FloatType)
-
     end
-
 end
 
 #=
@@ -136,11 +125,9 @@ function update_flow_attribute!(ns::NavierStokesPropagator)
 
     # State Mode Check
     if (state.fourier_mode == false)
-
         @error("Computing flow attribute when fourier_mode = $(state.fourier_mode).")
 
-        return
-
+        return nothing
     end
 
     # Bulk Velocity and Shear Velocity
@@ -149,7 +136,7 @@ function update_flow_attribute!(ns::NavierStokesPropagator)
     tau_lwr::Float64 =
         sim_cond.nu * (real(state.u[2, 1, 1] - state.u[1, 1, 1])) / domain.dy[1]
     tau_upr::Float64 =
-        -sim_cond.nu * (real(state.u[end, 1, 1] - state.u[end-1, 1, 1])) / domain.dy[end]
+        -sim_cond.nu * (real(state.u[end, 1, 1] - state.u[end - 1, 1, 1])) / domain.dy[end]
 
     # Friction Velocity
     state.u_tau_lwr = sqrt(abs(tau_lwr))
@@ -157,14 +144,11 @@ function update_flow_attribute!(ns::NavierStokesPropagator)
 
     # Pressure Gradient Update
     if (sim_cond.force_constraint == 'm')
-
         state.dp0_dx = -(tau_lwr + tau_upr) / domain.Ly
         state.dp0_dx += 1.5 * (state.u_bulk - sim_cond.force_magnitude)
-
     end
 
     return nothing
-
 end
 
 # Flow Statistics Computation
@@ -176,11 +160,9 @@ function update_flow_statistics!(ns::NavierStokesPropagator)
 
     # State Mode Check
     if (state.fourier_mode == false)
-
         @error("Updating flow statistics when fourier_mode = $(state.fourier_mode).")
 
-        return
-
+        return nothing
     end
 
     # Update Sample Size
@@ -205,7 +187,6 @@ function update_flow_statistics!(ns::NavierStokesPropagator)
 
     for iz in eachindex(domain.z)
         for ix in eachindex(domain.x)
-
             uu_bar[:] +=
                 (state.u[:, ix, iz] .- state.u_bar[:]) .*
                 (state.u[:, ix, iz] .- state.u_bar[:])
@@ -225,7 +206,6 @@ function update_flow_statistics!(ns::NavierStokesPropagator)
             vw_bar[:] +=
                 (state.v[:, ix, iz] .- state.v_bar[:]) .*
                 (state.w[:, ix, iz] .- state.w_bar[:])
-
         end
     end
 
@@ -243,17 +223,14 @@ function update_flow_statistics!(ns::NavierStokesPropagator)
     state.vw_bar[:] +=
         (vw_bar[:] / (domain.nx * domain.nz) - state.vw_bar[:]) / state.n_sample
 
-
     # Transformation Operation
     physical2fourier!(ns.tf, ns.state)
 
     return nothing
-
 end
 
 # CFL Time-step Update
 function timestep_refinement!(ns::NavierStokesPropagator)
-
     @info("Computing timestep refinement.")
 
     # Simulation Construct
@@ -274,7 +251,7 @@ function timestep_refinement!(ns::NavierStokesPropagator)
 
     for iz in eachindex(domain.z)
         for ix in eachindex(domain.x)
-            for iy = 3:domain.ny-2
+            for iy in 3:(domain.ny - 2)
 
                 # Time Step
                 if (abs(state.u[iy, ix, iz]) > 1e-3)
@@ -292,7 +269,6 @@ function timestep_refinement!(ns::NavierStokesPropagator)
                 if (min(dt_x, dt_y, dt_z) < dt)
                     dt = min(dt_x, dt_y, dt_z)
                 end
-
             end
         end
     end
@@ -320,7 +296,6 @@ function timestep_refinement!(ns::NavierStokesPropagator)
     @info("Timestep refinement applied: dt = $(dt_prev) -> $(t_stepper.dt)")
 
     return nothing
-
 end
 
 #=
@@ -339,57 +314,49 @@ function init_flowfield!(
 
     # Plane Poiseuille Flow
     if (sim_cond.init_cond == 'p')
-
         if (sim_cond.force_constraint == 'm')
-
-            for iy = 1:domain.ny
+            for iy in 1:(domain.ny)
                 state.u[iy, 1, 1] +=
                     (1.0 - domain.y[iy]^2) * sim_cond.force_magnitude / (2.0 / 3.0)
             end
 
         elseif (sim_cond.force_constraint == 'p')
-
-            for iy = 1:domain.ny
+            for iy in 1:(domain.ny)
                 state.u[iy, 1, 1] +=
                     (1.0 / sim_cond.nu) *
                     (1.0 - domain.y[iy]^2) *
                     (-0.5 * sim_cond.force_magnitude)
             end
-
         end
-
     end
 
     # Plane Couette Flow
     if (sim_cond.init_cond == 'c')
-
-        for iy = 1:domain.ny
+        for iy in 1:(domain.ny)
             state.u[iy, 1, 1] += domain.y[iy]
         end
-
     end
 
     # Enforce Boundary Condition
     state.u[1, :, :] .= 0.0
-    state.u[1, 1, 1] = sim_cond.bound_cond[(vel = 'u', wall = 'l')]
+    state.u[1, 1, 1] = sim_cond.bound_cond[(vel='u', wall='l')]
 
     state.u[end, :, :] .= 0.0
-    state.u[end, 1, 1] = sim_cond.bound_cond[(vel = 'u', wall = 'u')]
+    state.u[end, 1, 1] = sim_cond.bound_cond[(vel='u', wall='u')]
 
     state.v[1, :, :] .= 0.0
-    state.v[1, 1, 1] = sim_cond.bound_cond[(vel = 'v', wall = 'l')]
+    state.v[1, 1, 1] = sim_cond.bound_cond[(vel='v', wall='l')]
 
     state.v[end, :, :] .= 0.0
-    state.v[end, 1, 1] = sim_cond.bound_cond[(vel = 'v', wall = 'u')]
+    state.v[end, 1, 1] = sim_cond.bound_cond[(vel='v', wall='u')]
 
     state.w[1, :, :] .= 0.0
-    state.w[1, 1, 1] = sim_cond.bound_cond[(vel = 'w', wall = 'l')]
+    state.w[1, 1, 1] = sim_cond.bound_cond[(vel='w', wall='l')]
 
     state.w[end, :, :] .= 0.0
-    state.w[end, 1, 1] = sim_cond.bound_cond[(vel = 'w', wall = 'u')]
+    state.w[end, 1, 1] = sim_cond.bound_cond[(vel='w', wall='u')]
 
     return nothing
-
 end
 
 function apply_perturbation!(
@@ -398,39 +365,31 @@ function apply_perturbation!(
     state::State{T},
     tf::Transformer{T},
 ) where {T<:AbstractFloat}
-
     rng = Xoshiro(Int64(floor(time())))
 
     # Apply Perturbation
     iz_c::Int64 = 0
     ix_c::Int64 = 0
 
-    for iz = 2:domain.nz
-
+    for iz in 2:(domain.nz)
         freq_kz::T = tf.freq_kz[iz]
 
-        for fz = 1:domain.nz
-
+        for fz in 1:(domain.nz)
             if (tf.freq_kz[fz] == -freq_kz)
                 iz_c = fz
             end
-
         end
 
-        for ix = 1:domain.nx
-
+        for ix in 1:(domain.nx)
             freq_kx::T = tf.freq_kx[ix]
 
-            for fx = 1:domain.nx
-
+            for fx in 1:(domain.nx)
                 if (tf.freq_kx[fx] == -freq_kx)
                     ix_c = fx
                 end
-
             end
 
-            for iy = 2:domain.ny-1
-
+            for iy in 2:(domain.ny - 1)
                 u::T = (rand(rng, T) - 0.5) * sim_cond.init_kick / 2.0
                 state.u[iy, ix, iz] += u
                 state.u[iy, ix_c, iz_c] += u
@@ -442,34 +401,26 @@ function apply_perturbation!(
                 w::T = (rand(rng, T) - 0.5) * sim_cond.init_kick / 2.0
                 state.w[iy, ix, iz] += w
                 state.w[iy, ix_c, iz_c] += w
-
             end
-
         end
-
     end
 
     return nothing
-
 end
 
 function integral_y(
-    arr::Vector{Complex{T}},
-    dy::Vector{T},
+    arr::Vector{Complex{T}}, dy::Vector{T}
 )::Complex{T} where {T<:AbstractFloat}
 
     # Integral
     integral::Complex{T} = 0.0
 
     # Loop
-    for i = 1:length(dy)
-
-        integral += dy[i] * (arr[i+1] + arr[i]) / 2.0
-
+    for i in 1:length(dy)
+        integral += dy[i] * (arr[i + 1] + arr[i]) / 2.0
     end
 
     return real(integral)
-
 end
 
 #=

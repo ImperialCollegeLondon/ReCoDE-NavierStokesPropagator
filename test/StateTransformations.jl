@@ -18,11 +18,7 @@ Test Set
 
     # Initialise Transformation
     tf::Transformer = Transformer{Float64}(
-        "test/fftw_wisdom",
-        state,
-        domain;
-        wisdom_flag = "exhaustive",
-        test_mode = true,
+        "test/fftw_wisdom", state, domain; wisdom_flag="exhaustive", test_mode=true
     )
 
     # Random Array

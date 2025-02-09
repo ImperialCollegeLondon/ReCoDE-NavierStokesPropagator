@@ -55,12 +55,11 @@ function check_option_validity(init_cond::Char, force_type::Char)
 
     if (bool_force)
         throw(
-            ArgumentError("force_type argument ($(force_type)) not in admissible option."),
+            ArgumentError("force_type argument ($(force_type)) not in admissible option.")
         )
     end
 
     return nothing
-
 end
 
 # BoundTuple NamedTuple
@@ -73,10 +72,8 @@ BoundTuple is the type for the velocity boundary condition key (bound_cond::Dict
     The streamwise u-velocity of the lower wall would be: (vel='u', wall='l')
 """
 BoundTuple = @NamedTuple begin
-
     vel::Char # Velocity Component: 'u', 'v', 'w'
     wall::Char # Wall: upper wall 'u', lower wall 'l'
-
 end
 
 """
@@ -108,7 +105,6 @@ struct SimulationCondition{T<:AbstractFloat}
         bound_cond::Dict{BoundTuple,T},
         nu::T,
     ) where {T<:AbstractFloat}
-
         @info("--- Initialising SimulationCondition ---")
 
         # Validity Check
@@ -118,9 +114,7 @@ struct SimulationCondition{T<:AbstractFloat}
         @info(" ")
 
         return new{T}(init_cond, init_kick, force_type, force_magnitude, bound_cond, nu)
-
     end
-
 end
 
 #=
@@ -153,25 +147,20 @@ function planeCouetteFlow(init_cond::Char, init_kick::T) where {T<:AbstractFloat
     bound_cond::Dict{BoundTuple,T} = Dict()
 
     # u
-    bound_cond[(vel = 'u', wall = 'l')] = -1.0
-    bound_cond[(vel = 'u', wall = 'u')] = 1.0
+    bound_cond[(vel='u', wall='l')] = -1.0
+    bound_cond[(vel='u', wall='u')] = 1.0
 
     # v
-    bound_cond[(vel = 'v', wall = 'l')] = 0.0
-    bound_cond[(vel = 'v', wall = 'u')] = 0.0
+    bound_cond[(vel='v', wall='l')] = 0.0
+    bound_cond[(vel='v', wall='u')] = 0.0
 
     # w
-    bound_cond[(vel = 'w', wall = 'l')] = 0.0
-    bound_cond[(vel = 'w', wall = 'u')] = 0.0
+    bound_cond[(vel='w', wall='l')] = 0.0
+    bound_cond[(vel='w', wall='u')] = 0.0
 
     return SimulationCondition{T}(
-        init_cond,
-        init_kick,
-        force_type,
-        force_magnitude,
-        bound_cond,
+        init_cond, init_kick, force_type, force_magnitude, bound_cond
     )
-
 end
 
 """
@@ -180,10 +169,7 @@ $(SIGNATURES)
 Initalises the Plane Poiseuille Flow configuration for simulation.
 """
 function planePoiseuilleFlow(
-    init_cond::Char,
-    init_kick::T,
-    force_type::Char,
-    force_magnitude::T,
+    init_cond::Char, init_kick::T, force_type::Char, force_magnitude::T
 ) where {T<:AbstractFloat}
 
     # Validity Check
@@ -204,25 +190,20 @@ function planePoiseuilleFlow(
     bound_cond::Dict{BoundTuple,T} = Dict()
 
     # u
-    bound_cond[(vel = 'u', wall = 'l')] = 0.0
-    bound_cond[(vel = 'u', wall = 'u')] = 0.0
+    bound_cond[(vel='u', wall='l')] = 0.0
+    bound_cond[(vel='u', wall='u')] = 0.0
 
     # v
-    bound_cond[(vel = 'v', wall = 'l')] = 0.0
-    bound_cond[(vel = 'v', wall = 'u')] = 0.0
+    bound_cond[(vel='v', wall='l')] = 0.0
+    bound_cond[(vel='v', wall='u')] = 0.0
 
     # w
-    bound_cond[(vel = 'w', wall = 'l')] = 0.0
-    bound_cond[(vel = 'w', wall = 'u')] = 0.0
+    bound_cond[(vel='w', wall='l')] = 0.0
+    bound_cond[(vel='w', wall='u')] = 0.0
 
     return SimulationCondition{T}(
-        init_cond,
-        init_kick,
-        force_type,
-        force_magnitude,
-        bound_cond,
+        init_cond, init_kick, force_type, force_magnitude, bound_cond
     )
-
 end
 
 end
