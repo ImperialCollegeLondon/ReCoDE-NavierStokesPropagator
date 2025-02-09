@@ -1,8 +1,4 @@
-<!-- Your Project title, make it sound catchy! -->
-
 # Navier-Stokes Propagator
-
-<!-- Provide a short description to your project -->
 
 ## Description
 
@@ -10,32 +6,17 @@ The repository contains source files for a Julia package written to solve the ch
 
 The algorithm used here is inspired from [Diablo](https://github.com/johnryantaylor/DIABLO), written by John R. Taylor, with minor modifications to the mesh spacing.
 
-<!-- What should the students going through your exemplar learn -->
-
 ## Learning Outcomes
 
 - Ability to distinguish and compartmentalise a multi-facet simulation algorithm into sensible simulation constructs via the implementation with Julia Structs 
 - Adopting good testing methodologies, through implementation of unit and integration tests
 - Understanding the FFTW and HDF5 libraries and their abstraction through the usage of utility modules in their respective source files
 
-<!-- How long should they spend reading and practising using your Code.
-Provide your best estimate -->
-
 | Task       | Time    |
 | ---------- | ------- |
 | Reading    | 3 hours |
-| Practising | 3 hours |
 
 ## Requirements
-
-<!--
-If your exemplar requires students to have a background knowledge of something
-especially this is the place to mention that.
-
-List any resources you would recommend to get the students started.
-
-If there is an existing exemplar in the ReCoDE repositories link to that.
--->
 
 ### Theoretical
 - Exploring Fourier series and its relation to the discrete Fourier transform
@@ -63,23 +44,6 @@ Here are some examples:
 - Install [Julia](https://julialang.org/downloads/) on your system.
 - Install [VS Code](https://code.visualstudio.com/Download) on your system.
 - Install [Julia language extension](https://code.visualstudio.com/docs/languages/julia) on VS Code.
-<!-- Instructions on how the student should start going through the exemplar.
-
-Structure this section as you see fit but try to be clear, concise and accurate
-when writing your instructions.
-
-For example:
-Start by watching the introduction video,
-then study Jupyter notebooks 1-3 in the `intro` folder
-and attempt to complete exercise 1a and 1b.
-
-Once done, start going through through the PDF in the `main` folder.
-By the end of it you should be able to solve exercises 2 to 4.
-
-A final exercise can be found in the `final` folder.
-
-Solutions to the above can be found in `solutions`.
--->
 
 ## Getting Started
 
@@ -104,21 +68,24 @@ in a tree node.
 
 ```log
 .
-├── examples
-│   ├── ex1
-│   └── ex2
 ├── src
-|   ├── file1.py
-|   ├── file2.cpp
-|   ├── ...
-│   └── data
-├── app
-├── docs
-├── main
-└── test
+│   ├── NavierStokesPropagators.jl
+│   ├── NavierStokesPropagatorsCore.jl
+│   ├── sim
+│   │   ├── DomainDescriptors.jl
+│   │   ├── SimulationConditions.jl
+│   │   └── States.jl
+│   └── util
+│       ├── InputOutputManagers.jl
+│       ├── LinearSolvers.jl
+│       └── Transformations.jl
+├── test
+│   ├── sim (mirrors src/sim)
+│   ├── util (mirrors src/util)
+│   ├── StateTransformations.jl
+│   └── runtest.jl
+└── docs
 ```
-
-<!-- Change this to your License. Make sure you have added the file on GitHub -->
 
 ## License
 
