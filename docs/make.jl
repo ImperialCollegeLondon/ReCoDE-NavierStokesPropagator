@@ -24,7 +24,7 @@ makedocs(;
             "util/LinearSolvers.md",
             "util/InputOutputManagers.md",
         ],
-        "Best Practices" => Any["best_practices.md"],
+        "Developer Guide" => Any["best_practices.md"],
     ],
 )
 
