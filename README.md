@@ -1,5 +1,8 @@
 # Navier-Stokes Propagator
 
+[![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![codecov](https://codecov.io/gh/ImperialCollegeLondon/ReCoDE-NavierStokesPropagator/graph/badge.svg?token=PVTSZ9UZ49)](https://codecov.io/gh/ImperialCollegeLondon/ReCoDE-NavierStokesPropagator)
+
 ## Description
 
 The repository contains source files for [ReCoDE-NavierStokesPropagator.jl](https://github.com/ImperialCollegeLondon/ReCoDE-NavierStokesPropagator), a Julia package written to solve the chaotic Navier-Stokes equations. The project aims to exemplify the improvement of simulation code quality using good programming abstractions (Julia Structs) and defining sensible simulation constructs that reflect each core component of the simulation. Additionally, the repository adopts good programming practices by implementing detailed documentation with unit tests written for each simulation construct.
