@@ -142,20 +142,20 @@ array[:] ./= nx * nz
 For the treatment of non-linear terms, an additional dealiasing-mode is required, leading to the zero-ing of frequencies larger than a threshold.
 
 ```julia
-    # De-aliasing
-    if (dealias_mode)
-        for ix in 1:nx
-            if (abs(tf.freq_kx[ix]) > tf.freq_kx_max)
-                arr[:, ix, :] .= 0.0 + 0.0im
-            end
-        end
-
-        for iz in 1:nz
-            if (abs(tf.freq_kz[iz]) > tf.freq_kz_max)
-                arr[:, :, iz] .= 0.0 + 0.0im
-            end
+# De-aliasing
+if (dealias_mode)
+    for ix in 1:nx
+        if (abs(tf.freq_kx[ix]) > tf.freq_kx_max)
+            arr[:, ix, :] .= 0.0 + 0.0im
         end
     end
+
+    for iz in 1:nz
+        if (abs(tf.freq_kz[iz]) > tf.freq_kz_max)
+            arr[:, :, iz] .= 0.0 + 0.0im
+        end
+    end
+end
 ```
 
 The combination of all these optional and package specific features leads to the public APIs written for the `Transformations` module, allowing the develop to repeatably use the following transformation function as ease.
