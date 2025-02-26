@@ -8,9 +8,6 @@ Packages
 
 using DocStringExtensions
 
-using ..States: State
-using ..DomainDescriptors: DomainDescriptor
-
 #=
 Public API
 =#
