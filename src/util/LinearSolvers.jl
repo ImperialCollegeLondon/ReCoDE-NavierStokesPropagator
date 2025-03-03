@@ -57,7 +57,6 @@ struct LinearSolver{T<:AbstractFloat}
         @info(" ")
 
         return new(
-            false,
             TriDiagonalMatrix{T}(ny_F),
             TriDiagonalMatrix{T}(ny),
             TriDiagonalMatrix{Complex{T}}(ny),

@@ -25,6 +25,9 @@ The first step to running the simulation is to specify the type of simulation co
 For Plane Poiseulle flow, we have the following configuration:
 
 ```julia
+# Kinematic Viscosity
+nu::Float64 = 1.0/2200.0
+
 # (p) for Plane Poiseulle flow or (r) for restart from file
 init_cond::Char = 'p'
 
@@ -37,19 +40,22 @@ force_constraint::Char = 'p'
 # Forcing Magnitude
 force_magnitude::Float64 = -1.0
 
-sim_cond::SimulationCondition = planePoiseuilleFlow(init_cond, init_kick, force_type, force_magnitude) 
+sim_cond::SimulationCondition = planePoiseuilleFlow(init_cond, init_kick, force_constraint, force_magnitude, nu) 
 ```
 
 For Plane Couette flow, we have the following configuration:
 
 ```julia
-# (p) for Plane Poiseulle flow or (r) for restart from file
+# Kinematic Viscosity
+nu::Float64 = 1.0/400.0
+
+# (c) for Plane Couette flow or (r) for restart from file
 init_cond::Char = 'c'
 
 # Initial noise perturbation magnitude
 init_kick::Float64 = 0.001
 
-sim_cond::SimulationCondition = planeCouetteFlow(init_cond, init_kick)
+sim_cond::SimulationCondition = planeCouetteFlow(init_cond, init_kick, nu)
 ```
 
 ### Simulation Domain
@@ -94,7 +100,7 @@ adaptive_dt::Bool = false
 t_stepper::TimeStepper = TimeStepper{Float64}(dt, adaptive_dt, dt_max, dt_min, nt_max, cfl)
 
 # State
-state::State = State{FloatType}(T_sim, nx, ny, nz)
+state::State = State{Float64}(T_sim, nx, ny, nz)
 ```
 
 ### Utility Component
@@ -112,14 +118,14 @@ min_step_stats::Int64 = 1000
 io_m::InputOutputManager = InputOutputManager("input", "output", freq_state, freq_stats, min_step_stats)
 
 # Transformer
-tf::Transformer = Transformer{FloatType}("input/fftw_wisdom", state, domain; wisdom_flag="exhaustive")
+tf::Transformer = Transformer{Float64}("input/fftw_wisdom", state, domain; wisdom_flag="exhaustive")
 ```
 
 ### Run Simulation
 Lastly, we can run the simulation via:
 
 ```julia
-ns::NavierStokesPropagator = NavierStokesPropagator(t_stepper, domain, state, sim_cond, io_m, tf, FloatType)
+ns::NavierStokesPropagator = NavierStokesPropagator(t_stepper, domain, state, sim_cond, io_m, tf, Float64)
 
 run_simulation!(ns)
 ```

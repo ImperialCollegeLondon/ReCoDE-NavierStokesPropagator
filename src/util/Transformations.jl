@@ -176,6 +176,8 @@ function physical2fourier!(
         tf.fft_plan * arr
     end
 
+    ny::Int64, nx::Int64, nz::Int64 = size(arr)
+
     # De-aliasing
     if (dealias_mode)
         for ix in 1:nx
