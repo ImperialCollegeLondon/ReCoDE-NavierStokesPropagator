@@ -94,7 +94,6 @@ function run_simulation!(ns::NavierStokesPropagator)
 
         if (mod(ns.state.nt, 5) == 0)
             write_attribute(ns.io_m, ns.state, ns.t_stepper.dt, ns.sim_cond.nu)
-            flush(log_io)
         end
 
         # State / Statistics I/O

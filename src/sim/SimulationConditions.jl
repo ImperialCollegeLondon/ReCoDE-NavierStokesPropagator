@@ -123,7 +123,7 @@ $(SIGNATURES)
 
 Initialises the Plane Couette Flow configuration simulation.
 """
-function planeCouetteFlow(init_cond::Char, init_kick::T) where {T<:AbstractFloat}
+function planeCouetteFlow(init_cond::Char, init_kick::T, nu::T) where {T<:AbstractFloat}
 
     # Initial Condition
     if (init_cond == 'p')
@@ -156,7 +156,7 @@ function planeCouetteFlow(init_cond::Char, init_kick::T) where {T<:AbstractFloat
     bound_cond[(vel='w', wall='u')] = 0.0
 
     return SimulationCondition{T}(
-        init_cond, init_kick, force_type, force_magnitude, bound_cond
+        init_cond, init_kick, force_type, force_magnitude, bound_cond, nu
     )
 end
 
@@ -166,7 +166,7 @@ $(SIGNATURES)
 Initalises the Plane Poiseuille Flow configuration for simulation.
 """
 function planePoiseuilleFlow(
-    init_cond::Char, init_kick::T, force_type::Char, force_magnitude::T
+    init_cond::Char, init_kick::T, force_type::Char, force_magnitude::T, nu::T
 ) where {T<:AbstractFloat}
 
     # Validity Check
@@ -199,7 +199,7 @@ function planePoiseuilleFlow(
     bound_cond[(vel='w', wall='u')] = 0.0
 
     return SimulationCondition{T}(
-        init_cond, init_kick, force_type, force_magnitude, bound_cond
+        init_cond, init_kick, force_type, force_magnitude, bound_cond, nu
     )
 end
 

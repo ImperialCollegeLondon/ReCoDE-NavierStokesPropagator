@@ -24,6 +24,6 @@ The method parameter are dependent on
 
 
 ```@docs
-planeCouetteFlow(init_cond::Char, init_kick::T) where {T<:AbstractFloat}
-planePoiseuilleFlow(init_cond::Char, init_kick::T, force_type::Char, force_magnitude::T) where {T<:AbstractFloat}
+planeCouetteFlow(init_cond::Char, init_kick::T, nu::T) where {T<:AbstractFloat}
+planePoiseuilleFlow(init_cond::Char, init_kick::T, force_type::Char, force_magnitude::T, nu::T) where {T<:AbstractFloat}
 ```

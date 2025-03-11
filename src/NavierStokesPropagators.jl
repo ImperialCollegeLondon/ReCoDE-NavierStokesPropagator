@@ -22,6 +22,8 @@ using .Transformations
 include("util/LinearSolvers.jl")
 using .LinearSolvers
 
+using Random
+
 #=
 Public API
 =#
